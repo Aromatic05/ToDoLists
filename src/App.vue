@@ -1,5 +1,5 @@
 <template>
-  <div class="app-container" :class="{ 'dark-mode': isDarkMode }" :style="{ background: currentBgColor }">
+  <div class="app-container">
     <Sidebar 
       :views="views" 
       :current-view="currentView" 
@@ -143,9 +143,17 @@ export default {
     toggleDarkMode() {
       this.isDarkMode = !this.isDarkMode;
       ThemeService.saveThemePreference(this.isDarkMode);
-      
-      // 设置相应主题的背景颜色
-      this.currentBgColor = ThemeService.getBackgroundColor(this.isDarkMode);
+      // 在根元素切换暗黑模式类名
+      document.documentElement.classList.toggle('dark-mode', this.isDarkMode);
+      // 同步更新背景色到 CSS 变量
+      const defaultColor = ThemeService.getBackgroundColor(this.isDarkMode);
+      this.setBackgroundColor(defaultColor);
+    },
+    setBackgroundColor(color) {
+      this.currentBgColor = color;
+      // 将颜色设置到 CSS 变量
+      document.documentElement.style.setProperty('--user-bg-color', color);
+      ThemeService.saveBackgroundColor(color, this.isDarkMode);
     },
     
     // 搜索知识库
@@ -182,12 +190,10 @@ export default {
   mounted() {
     // 加载主题偏好
     this.isDarkMode = ThemeService.loadThemePreference();
-    
-    // 加载背景颜色
-    this.currentBgColor = ThemeService.getBackgroundColor(this.isDarkMode);
-    
-    // 添加点击外部关闭搜索结果的事件监听
-    document.addEventListener('click', this.closeSearchResults);
+    const savedColor = ThemeService.getBackgroundColor(this.isDarkMode);
+    document.documentElement.classList.toggle('dark-mode', this.isDarkMode);
+    document.documentElement.style.setProperty('--user-bg-color', savedColor);
+    this.currentBgColor = savedColor;
   },
   beforeUnmount() {
     // 移除事件监听
@@ -196,79 +202,10 @@ export default {
 };
 </script>
 
-<style scoped>
+<style>
 .app-container {
-  min-height: 100vh;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-  color: #4a5568;
-  transition: all 0.5s ease;
-}
-
-.content {
-  width: 100%;
-  min-height: 100vh;
-  padding: 30px;
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.content-wrapper {
-  width: 100%;
-  max-width: 1200px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-}
-
-.view-title {
-  margin: 16px 0 24px 0;
-  color: #3c4043;
-  font-weight: 500;
-  font-size: 28px;
-  text-align: center;
-  transition: color 0.5s ease;
-}
-
-.view-content {
-  flex: 1;
-  overflow: hidden;
-  position: relative;
-  padding: 0 8px;
-}
-
-.search-view {
-  width: 100%;
-  max-width: 900px;
-  margin: 0 auto;
-}
-
-.selected-result {
-  margin-bottom: 24px;
-}
-
-.no-result {
-  text-align: center;
-  padding: 48px 0;
-  color: #888;
-}
-
-.fade-enter-active, .fade-leave-active {
-  transition: all 0.5s ease;
-}
-
-.fade-enter-from, .fade-leave-to {
-  opacity: 0;
-  transform: translateY(20px);
-}
-
-/* Dark mode styles */
-.dark-mode .view-title {
-  color: #e1e2e5;
-}
-
-.dark-mode .no-result {
-  color: #b0b3b8;
+  background: var(--user-bg-color, var(--bg-color));
+  color: var(--text-color);
+  transition: background-color 0.5s ease, color 0.5s ease;
 }
 </style>

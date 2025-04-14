@@ -47,7 +47,7 @@ export default {
   width: 220px;
   padding: 18px;
   border-radius: 20px;
-  background: rgba(255, 255, 255, 0.85);
+  background:var(--card-bg, rgba(255, 255, 255, 0.7));
   backdrop-filter: blur(15px);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   z-index: 99;
@@ -60,7 +60,7 @@ export default {
   margin-bottom: 14px;
   font-size: 16px;
   font-weight: 500;
-  color: #333;
+  color: var(--text-color-primary,#333);
   transition: color 0.5s ease;
 }
 

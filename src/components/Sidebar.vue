@@ -85,9 +85,9 @@ export default {
   border: none;
   border-radius: 50%;
   font-size: 18px;
-  background: rgba(255, 255, 255, 0.8);
+  background: var(--button-bg, rgba(255, 255, 255, 0.7));
   backdrop-filter: blur(10px);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 10px var(--card-shadow, rgba(0, 0, 0, 0.1));
   cursor: pointer;
   transition: all 0.3s ease;
   display: flex;
@@ -102,24 +102,7 @@ export default {
 
 .circle-button.active {
   background: rgba(66, 133, 244, 0.9);
-  color: white;
+  color: var(--card-bg, white);
   box-shadow: 0 4px 12px rgba(66, 133, 244, 0.4);
-}
-
-/* Dark mode styles */
-:deep(.dark-mode) .circle-button {
-  background: rgba(40, 40, 40, 0.8);
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
-  color: #e1e2e5;
-}
-
-:deep(.dark-mode) .circle-button:hover {
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
-}
-
-:deep(.dark-mode) .circle-button.active {
-  background: rgba(138, 180, 248, 0.25);
-  color: #8ab4f8;
-  box-shadow: 0 4px 12px rgba(138, 180, 248, 0.2);
 }
 </style>

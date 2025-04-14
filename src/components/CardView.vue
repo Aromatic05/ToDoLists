@@ -213,7 +213,7 @@ export default {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.8);
+  background:(--card-bg, rgba(255, 255, 255, 0.7));
   backdrop-filter: blur(10px);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   display: flex;
@@ -229,7 +229,7 @@ export default {
 
 .indicator-text {
   font-size: 14px;
-  color: #666;
+  color: (--card-bg, rgba(255, 255, 255, 0.7));
 }
 
 .pull-indicator.loading .indicator-circle span {
@@ -262,19 +262,6 @@ export default {
 .fade-enter-from, .fade-leave-to {
   opacity: 0;
   transform: translateY(20px);
-}
-
-:deep(.dark-mode) .indicator-circle {
-  background: rgba(40, 40, 40, 0.8);
-}
-
-:deep(.dark-mode) .indicator-text {
-  color: #b0b3b8;
-}
-
-:deep(.dark-mode) .set-title {
-  color: #e1e2e5;
-  border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 @keyframes spin {

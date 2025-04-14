@@ -1,0 +1,83 @@
+/* 核心页面布局结构 */
+html, body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+  
+  .app-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    min-height: 100vh;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    background: var(--user-bg-color, var(--bg-color));
+    transition: all 0.5s ease;
+    overflow-x: hidden; 
+  }
+  
+  .content {
+    width: 100%; 
+    min-height: 100vh;
+    padding: 20px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .content-wrapper {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    overflow-x: hidden; 
+  }
+  
+  .view-title {
+    margin: 16px 0 24px 0;
+    color: var(--view-title-color);
+    font-weight: 500;
+    font-size: 28px;
+    text-align: center;
+    transition: color 0.5s ease;
+  }
+  
+  .view-content {
+    margin-left: 35px;
+    margin-right: 20px;
+    flex: 1;
+    overflow: hidden;
+    position: relative;
+    padding: 0 8px;
+  }
+  
+  .search-view {
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  
+  .selected-result {
+    margin-bottom: 24px;
+  }
+  
+  .no-result {
+    text-align: center;
+    padding: 48px 0;
+    color: var(--no-result-color);
+  }
+  
+  .fade-enter-active, .fade-leave-active {
+    transition: all 0.5s ease;
+  }
+  
+  .fade-enter-from, .fade-leave-to {
+    opacity: 0;
+    transform: translateY(20px);
+  }
