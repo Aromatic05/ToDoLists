@@ -1,160 +1,274 @@
-<script setup>
-import { ref } from "vue";
-import { invoke } from "@tauri-apps/api/core";
-
-const greetMsg = ref("");
-const name = ref("");
-
-async function greet() {
-  // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-  greetMsg.value = await invoke("greet", { name: name.value });
-}
-</script>
-
 <template>
-  <main class="container">
-    <h1>Welcome to Tauri + Vue</h1>
+  <div class="app-container" :class="{ 'dark-mode': isDarkMode }" :style="{ background: currentBgColor }">
+    <Sidebar 
+      :views="views" 
+      :current-view="currentView" 
+      :is-dark-mode="isDarkMode"
+      @view-change="currentView = $event"
+      @toggle-dark-mode="toggleDarkMode"
+      @toggle-color-picker="showColorPicker = !showColorPicker"
+    />
+    
+    <ColorPicker 
+      :show="showColorPicker" 
+      :colors="currentThemeColors" 
+      :current-color="currentBgColor"
+      :is-dark-mode="isDarkMode"
+      @color-change="setBackgroundColor"
+    />
+    
+    <main class="content">
+      <div class="content-wrapper">
+        <SearchBar 
+          v-model:search-query="searchQuery"
+          :show-results="showSearchResults" 
+          :results="searchResults"
+          @search="searchKnowledge"
+          @select-result="selectSearchResult"
+        />
 
-    <div class="row">
-      <a href="https://vitejs.dev" target="_blank">
-        <img src="/vite.svg" class="logo vite" alt="Vite logo" />
-      </a>
-      <a href="https://tauri.app" target="_blank">
-        <img src="/tauri.svg" class="logo tauri" alt="Tauri logo" />
-      </a>
-      <a href="https://vuejs.org/" target="_blank">
-        <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-      </a>
-    </div>
-    <p>Click on the Tauri, Vite, and Vue logos to learn more.</p>
-
-    <form class="row" @submit.prevent="greet">
-      <input id="greet-input" v-model="name" placeholder="Enter a name..." />
-      <button type="submit">Greet</button>
-    </form>
-    <p>{{ greetMsg }}</p>
-  </main>
+        <h2 class="view-title">{{ getCurrentViewName() }}</h2>
+        
+        <!-- Search Results View -->
+        <div v-if="currentView === 'search'" class="search-view">
+          <div v-if="selectedResult" class="selected-result">
+            <CardComponent :data="selectedResult" />
+          </div>
+          <div v-else class="no-result">
+            <p>请输入关键词搜索知识库</p>
+          </div>
+        </div>
+        
+        <!-- Regular Views with CardView component -->
+        <div v-else class="view-content">
+          <CardView 
+            :currentCardSet="currentCards" 
+            :nextCardSet="nextCards"
+            :nextSetTitle="nextSetTitle"
+            @card-click="handleCardClick"
+          />
+        </div>
+      </div>
+    </main>
+  </div>
 </template>
 
+<script>
+import Sidebar from './components/Sidebar.vue';
+import ColorPicker from './components/ColorPicker.vue';
+import SearchBar from './components/SearchBar.vue';
+import CardComponent from './components/Card.vue';
+import CardView from './components/CardView.vue';
+
+// 导入服务
+import ThemeService from './services/ThemeService';
+import KnowledgeBaseService from './services/KnowledgeBaseService';
+import CardDataService from './services/CardDataService';
+
+export default {
+  components: {
+    Sidebar,
+    ColorPicker,
+    SearchBar,
+    CardComponent,
+    CardView
+  },
+  data() {
+    return {
+      // 视图状态
+      currentView: "home",
+      
+      // 主题状态
+      isDarkMode: false,
+      currentBgColor: "#f8f9fa",
+      showColorPicker: false,
+      
+      // 搜索状态
+      searchQuery: "",
+      showSearchResults: false,
+      searchResults: [],
+      selectedResult: null,
+      
+      // 视图配置
+      views: [
+        { id: "home", name: "首页", icon: "🏠" },
+        { id: "discover", name: "发现", icon: "🔍" },
+        { id: "search", name: "知识库", icon: "📚" },
+        { id: "profile", name: "个人信息", icon: "👤" },
+        { id: "favorites", name: "收藏", icon: "⭐" },
+        { id: "settings", name: "设置", icon: "⚙️" },
+      ]
+    };
+  },
+  computed: {
+    // 获取当前主题的颜色选项
+    currentThemeColors() {
+      return ThemeService.getThemeColors(this.isDarkMode);
+    },
+    
+    // 获取当前视图的卡片
+    currentCards() {
+      return CardDataService.getCardsForView(this.currentView);
+    },
+    
+    // 获取当前视图的下一组卡片
+    nextCards() {
+      return CardDataService.getNextCardsForView(this.currentView);
+    },
+    
+    // 获取当前视图下一组卡片的标题
+    nextSetTitle() {
+      return CardDataService.getNextSetTitle(this.currentView);
+    }
+  },
+  methods: {
+    // 获取当前视图名称
+    getCurrentViewName() {
+      const view = this.views.find(v => v.id === this.currentView);
+      return view ? view.name : "";
+    },
+    
+    // 处理卡片点击事件
+    handleCardClick(card) {
+      console.log('Card clicked:', card);
+    },
+    
+    // 设置背景颜色
+    setBackgroundColor(color) {
+      this.currentBgColor = color;
+      ThemeService.saveBackgroundColor(color, this.isDarkMode);
+    },
+    
+    // 切换暗黑/浅色模式
+    toggleDarkMode() {
+      this.isDarkMode = !this.isDarkMode;
+      ThemeService.saveThemePreference(this.isDarkMode);
+      
+      // 设置相应主题的背景颜色
+      this.currentBgColor = ThemeService.getBackgroundColor(this.isDarkMode);
+    },
+    
+    // 搜索知识库
+    searchKnowledge() {
+      if (this.searchQuery.trim() === '') {
+        this.searchResults = [];
+        this.showSearchResults = false;
+        return;
+      }
+      
+      this.searchResults = KnowledgeBaseService.searchKnowledge(this.searchQuery);
+      this.showSearchResults = true;
+      
+      // 如果用户按回车键并且有搜索结果，自动导航到知识库视图并显示第一个结果
+      if (event && event.key === 'Enter' && this.searchResults.length > 0) {
+        this.selectSearchResult(this.searchResults[0]);
+      }
+    },
+    
+    // 选择搜索结果
+    selectSearchResult(result) {
+      this.selectedResult = result;
+      this.currentView = 'search';
+      this.showSearchResults = false;
+    },
+    
+    // 关闭搜索结果
+    closeSearchResults(event) {
+      if (!event.target.closest('.search-container')) {
+        this.showSearchResults = false;
+      }
+    }
+  },
+  mounted() {
+    // 加载主题偏好
+    this.isDarkMode = ThemeService.loadThemePreference();
+    
+    // 加载背景颜色
+    this.currentBgColor = ThemeService.getBackgroundColor(this.isDarkMode);
+    
+    // 添加点击外部关闭搜索结果的事件监听
+    document.addEventListener('click', this.closeSearchResults);
+  },
+  beforeUnmount() {
+    // 移除事件监听
+    document.removeEventListener('click', this.closeSearchResults);
+  }
+};
+</script>
+
 <style scoped>
-.logo.vite:hover {
-  filter: drop-shadow(0 0 2em #747bff);
+.app-container {
+  min-height: 100vh;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  color: #4a5568;
+  transition: all 0.5s ease;
 }
 
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #249b73);
-}
-
-</style>
-<style>
-:root {
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 400;
-
-  color: #0f0f0f;
-  background-color: #f6f6f6;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
-}
-
-.container {
-  margin: 0;
-  padding-top: 10vh;
+.content {
+  width: 100%;
+  min-height: 100vh;
+  padding: 30px;
+  overflow: hidden;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  text-align: center;
+  align-items: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: 0.75s;
-}
-
-.logo.tauri:hover {
-  filter: drop-shadow(0 0 2em #24c8db);
-}
-
-.row {
+.content-wrapper {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
   display: flex;
-  justify-content: center;
+  flex-direction: column;
 }
 
-a {
+.view-title {
+  margin: 16px 0 24px 0;
+  color: #3c4043;
   font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-
-a:hover {
-  color: #535bf2;
-}
-
-h1 {
+  font-size: 28px;
   text-align: center;
+  transition: color 0.5s ease;
 }
 
-input,
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  color: #0f0f0f;
-  background-color: #ffffff;
-  transition: border-color 0.25s;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
+.view-content {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  padding: 0 8px;
 }
 
-button {
-  cursor: pointer;
+.search-view {
+  width: 100%;
+  max-width: 900px;
+  margin: 0 auto;
 }
 
-button:hover {
-  border-color: #396cd8;
-}
-button:active {
-  border-color: #396cd8;
-  background-color: #e8e8e8;
+.selected-result {
+  margin-bottom: 24px;
 }
 
-input,
-button {
-  outline: none;
+.no-result {
+  text-align: center;
+  padding: 48px 0;
+  color: #888;
 }
 
-#greet-input {
-  margin-right: 5px;
+.fade-enter-active, .fade-leave-active {
+  transition: all 0.5s ease;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    color: #f6f6f6;
-    background-color: #2f2f2f;
-  }
-
-  a:hover {
-    color: #24c8db;
-  }
-
-  input,
-  button {
-    color: #ffffff;
-    background-color: #0f0f0f98;
-  }
-  button:active {
-    background-color: #0f0f0f69;
-  }
+.fade-enter-from, .fade-leave-to {
+  opacity: 0;
+  transform: translateY(20px);
 }
 
+/* Dark mode styles */
+.dark-mode .view-title {
+  color: #e1e2e5;
+}
+
+.dark-mode .no-result {
+  color: #b0b3b8;
+}
 </style>
