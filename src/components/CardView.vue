@@ -172,7 +172,7 @@ export default {
   position: relative;
   height: 100%;
   overflow-y: auto;
-  overflow-x: hidden;
+  padding: 0 24px;
   -webkit-overflow-scrolling: touch; /* For smooth iOS scrolling */
 }
 
@@ -186,6 +186,7 @@ export default {
 
 .card-wrapper {
   width: 100%;
+  padding: 0 2px; /* 为阴影留出空间 */
 }
 
 .pull-indicator {
@@ -213,7 +214,7 @@ export default {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background:(--card-bg, rgba(255, 255, 255, 0.7));
+  background:var(--md-sys-color-on-surface, rgba(255, 255, 255, 0.7));
   backdrop-filter: blur(10px);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
   display: flex;

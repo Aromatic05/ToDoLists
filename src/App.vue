@@ -3,18 +3,9 @@
     <Sidebar 
       :views="views" 
       :current-view="currentView" 
-      :is-dark-mode="isDarkMode"
       @view-change="currentView = $event"
-      @toggle-dark-mode="toggleDarkMode"
-      @toggle-color-picker="showColorPicker = !showColorPicker"
-    />
-    
-    <ColorPicker 
-      :show="showColorPicker" 
-      :colors="currentThemeColors" 
-      :current-color="currentBgColor"
-      :is-dark-mode="isDarkMode"
-      @color-change="setBackgroundColor"
+      @theme-change="handleThemeChange"
+      @toggle-dark-mode="handleDarkModeToggle"
     />
     
     <main class="content">
@@ -55,20 +46,15 @@
 
 <script>
 import Sidebar from './components/Sidebar.vue';
-import ColorPicker from './components/ColorPicker.vue';
 import SearchBar from './components/SearchBar.vue';
 import CardComponent from './components/Card.vue';
 import CardView from './components/CardView.vue';
-
-// 导入服务
-import ThemeService from './services/ThemeService';
-import KnowledgeBaseService from './services/KnowledgeBaseService';
 import CardDataService from './services/CardDataService';
+import KnowledgeBaseService from './services/KnowledgeBaseService';
 
 export default {
   components: {
     Sidebar,
-    ColorPicker,
     SearchBar,
     CardComponent,
     CardView
@@ -78,11 +64,6 @@ export default {
       // 视图状态
       currentView: "home",
       
-      // 主题状态
-      isDarkMode: false,
-      currentBgColor: "#f8f9fa",
-      showColorPicker: false,
-      
       // 搜索状态
       searchQuery: "",
       showSearchResults: false,
@@ -91,21 +72,16 @@ export default {
       
       // 视图配置
       views: [
-        { id: "home", name: "首页", icon: "🏠" },
-        { id: "discover", name: "发现", icon: "🔍" },
-        { id: "search", name: "知识库", icon: "📚" },
-        { id: "profile", name: "个人信息", icon: "👤" },
-        { id: "favorites", name: "收藏", icon: "⭐" },
-        { id: "settings", name: "设置", icon: "⚙️" },
+        { id: "home", name: "首页", icon: "mdi-home" },
+        { id: "discover", name: "发现", icon: "mdi-compass" },
+        { id: "search", name: "知识库", icon: "mdi-book" },
+        { id: "profile", name: "个人信息", icon: "mdi-account" },
+        { id: "favorites", name: "收藏", icon: "mdi-star" },
+        { id: "settings", name: "设置", icon: "mdi-cog" },
       ]
     };
   },
   computed: {
-    // 获取当前主题的颜色选项
-    currentThemeColors() {
-      return ThemeService.getThemeColors(this.isDarkMode);
-    },
-    
     // 获取当前视图的卡片
     currentCards() {
       return CardDataService.getCardsForView(this.currentView);
@@ -133,27 +109,14 @@ export default {
       console.log('Card clicked:', card);
     },
     
-    // 设置背景颜色
-    setBackgroundColor(color) {
-      this.currentBgColor = color;
-      ThemeService.saveBackgroundColor(color, this.isDarkMode);
+    // 处理主题切换
+    handleThemeChange(themeName) {
+      console.log('Theme changed to:', themeName);
     },
     
-    // 切换暗黑/浅色模式
-    toggleDarkMode() {
-      this.isDarkMode = !this.isDarkMode;
-      ThemeService.saveThemePreference(this.isDarkMode);
-      // 在根元素切换暗黑模式类名
-      document.documentElement.classList.toggle('dark-mode', this.isDarkMode);
-      // 同步更新背景色到 CSS 变量
-      const defaultColor = ThemeService.getBackgroundColor(this.isDarkMode);
-      this.setBackgroundColor(defaultColor);
-    },
-    setBackgroundColor(color) {
-      this.currentBgColor = color;
-      // 将颜色设置到 CSS 变量
-      document.documentElement.style.setProperty('--user-bg-color', color);
-      ThemeService.saveBackgroundColor(color, this.isDarkMode);
+    // 处理暗黑模式切换
+    handleDarkModeToggle(isDarkMode) {
+      console.log('Dark mode changed to:', isDarkMode);
     },
     
     // 搜索知识库
@@ -187,14 +150,6 @@ export default {
       }
     }
   },
-  mounted() {
-    // 加载主题偏好
-    this.isDarkMode = ThemeService.loadThemePreference();
-    const savedColor = ThemeService.getBackgroundColor(this.isDarkMode);
-    document.documentElement.classList.toggle('dark-mode', this.isDarkMode);
-    document.documentElement.style.setProperty('--user-bg-color', savedColor);
-    this.currentBgColor = savedColor;
-  },
   beforeUnmount() {
     // 移除事件监听
     document.removeEventListener('click', this.closeSearchResults);
@@ -204,8 +159,8 @@ export default {
 
 <style>
 .app-container {
-  background: var(--user-bg-color, var(--bg-color));
-  color: var(--text-color);
+  background: var(--md-sys-color-background);
+  color: var(--md-sys-color-on-surface);
   transition: background-color 0.5s ease, color 0.5s ease;
 }
 </style>

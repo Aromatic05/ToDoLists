@@ -81,7 +81,7 @@ export default {
   align-items: center;
   width: 100%;
   border-radius: 24px;
-  background: rgba(255, 255, 255, 0.9);
+  background: var(--md-sys-color-surface-container);
   backdrop-filter: blur(10px);
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
   transition: all 0.3s ease;
@@ -94,7 +94,7 @@ export default {
   border: none;
   background: transparent;
   font-size: 16px;
-  color: #333;
+  color: var(--md-sys-color-on-surface);
   outline: none;
 }
 
@@ -155,7 +155,7 @@ export default {
 .search-result-item p {
   margin: 0;
   font-size: 14px;
-  color: #666;
+  color: var(--md-sys-color-on-surface);
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
@@ -172,39 +172,5 @@ export default {
     opacity: 1;
     transform: translateY(0);
   }
-}
-
-/* Dark mode styles */
-:deep(.dark-mode) .search-box {
-  background: rgba(40, 40, 40, 0.9);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
-}
-
-:deep(.dark-mode) .search-input {
-  color: #e1e2e5;
-}
-
-:deep(.dark-mode) .search-input::placeholder {
-  color: rgba(225, 226, 229, 0.5);
-}
-
-:deep(.dark-mode) .search-results {
-  background: rgba(40, 40, 40, 0.95);
-}
-
-:deep(.dark-mode) .search-result-item {
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-}
-
-:deep(.dark-mode) .search-result-item:hover {
-  background: rgba(255, 255, 255, 0.05);
-}
-
-:deep(.dark-mode) .search-result-item h4 {
-  color: #e1e2e5;
-}
-
-:deep(.dark-mode) .search-result-item p {
-  color: #b0b3b8;
 }
 </style>

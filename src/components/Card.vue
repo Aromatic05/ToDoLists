@@ -28,31 +28,33 @@ export default {
 .card {
   padding: 20px; 
   border-radius: 18px;
-  background: var(--card-bg, rgba(255, 255, 255, 0.7));
+  background: var(--md-sys-color-surface-container);
   backdrop-filter: blur(15px);
-  box-shadow: var(--card-shadow, 0 4px 10px rgba(0, 0, 0, 0.05));
+  box-shadow: 0 2px 6px var(--md-sys-color-shadow);
   transition: all 0.3s ease;
   cursor: pointer;
   max-width: 100%;
   width: 100%;
   box-sizing: border-box;
   min-width: 280px; 
+  border: 1px solid var(--md-sys-color-outline);
 }
 
 .card:hover {
-  transform: translateY(-5px);
-  box-shadow: var(--card-hover-shadow, 0 8px 15px rgba(0, 0, 0, 0.08));
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px var(--md-sys-color-shadow);
+  background: var(--md-sys-color-surface-container-high);
 }
 
 .card h3 {
   margin-top: 0;
-  color: var(--text-color-primary, #202124);
+  color: var(--md-sys-color-on-surface);
   font-weight: 500;
   font-size: 18px;
 }
 
 .card p {
-  color: var(--text-color-secondary, #5f6368);
+  color: var(--md-sys-color-on-surface-variant);
   margin-bottom: 0;
   line-height: 1.5;
 }
@@ -66,11 +68,11 @@ export default {
 
 .tag {
   padding: 4px 12px;
-  background: var(--tag-bg, rgba(66, 133, 244, 0.1));
-  color: var(--tag-color, #4285f4);
+  background: var(--md-sys-color-surface-variant);
+  color: var(--md-sys-color-on-surface-variant);
   border-radius: 16px;
   font-size: 14px;
   white-space: nowrap;
+  border: 1px solid var(--md-sys-color-outline);
 }
-
 </style>
