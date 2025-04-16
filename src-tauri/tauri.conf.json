@@ -13,10 +13,8 @@
     "windows": [
       {
         "title": "todolists",
-        "width": 1280,
-        "height": 800,
-        "minWidth": 1280,
-        "minHeight": 800
+        "width": 800,
+        "height": 600
       }
     ],
     "security": {
