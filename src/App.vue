@@ -37,14 +37,12 @@
 <script>
 import Sidebar from './components/Sidebar.vue';
 import SearchBar from './components/SearchBar.vue';
-import CardComponent from './components/Card.vue';
 import CardView from './components/CardView.vue';
 
 export default {
   components: {
     Sidebar,
     SearchBar,
-    CardComponent,
     CardView
   },
   data() {

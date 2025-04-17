@@ -15,20 +15,22 @@
         class="card-wrapper"
         :data-index="index"
       >
-        <CardComponent :data="card" />
+        <BaseCard :data="card" />
       </div>
     </transition-group>
   </div>
 </template>
 
 <script>
-import CardComponent from './Card.vue';
+import BaseCard from './BaseCard.vue';
+import CalendarCard from './CalendarCard.vue';
 import CardDataService from '../services/CardDataService';
 
 export default {
   name: 'CardView',
   components: {
-    CardComponent
+    BaseCard,
+    CalendarCard
   },
   props: {
     viewId: {
