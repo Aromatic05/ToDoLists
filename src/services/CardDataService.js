@@ -1,5 +1,8 @@
 // 卡片数据服务
 
+// 每页加载的卡片数量
+const CARDS_PER_PAGE = 12;
+
 // 卡片数据
 const cardsData = {
   home: [
@@ -18,23 +21,7 @@ const cardsData = {
     { id: 5, title: "开发者社区", content: "加入我们的开发者社区，分享您的见解", tags: ["社区", "开发"] },
     { id: 6, title: "设计资源", content: "探索高质量的设计资源和工具", tags: ["设计", "资源"] },
     { id: 7, title: "学习路径", content: "根据您的兴趣定制的学习计划", tags: ["学习", "成长"] },
-    { id: 8, title: "活动日历", content: "即将举行的线上和线下活动", tags: ["活动", "日历"] }
-  ],
-  home_next: [
-    { id: 7, title: "健康数据", content: "查看您的健康指标和活动统计", tags: ["健康", "数据"] },
-    { id: 8, title: "财务概览", content: "本月支出和预算跟踪", tags: ["财务", "预算"] },
-    { id: 9, title: "旅行计划", content: "您即将到来的旅行和行程安排", tags: ["旅行", "计划"] },
-    { id: 10, title: "媒体推荐", content: "根据您的喜好推荐的音乐和影视作品", tags: ["媒体", "推荐"] },
-    { id: 11, title: "学习进度", content: "您正在学习的课程和进度更新", tags: ["学习", "进度"] },
-    { id: 12, title: "提醒事项", content: "重要的提醒和即将到来的事件", tags: ["提醒", "事件"] }
-  ],
-  discover_next: [
-    { id: 9, title: "创意工作坊", content: "参与互动创意活动和挑战", tags: ["创意", "工作坊"] },
-    { id: 10, title: "新兴科技", content: "了解最前沿的科技发展和创新", tags: ["科技", "创新"] },
-    { id: 11, title: "专家访谈", content: "各领域专家分享的独到见解", tags: ["访谈", "专家"] },
-    { id: 12, title: "案例研究", content: "深入分析成功项目背后的故事", tags: ["案例", "研究"] },
-    { id: 13, title: "社区贡献", content: "查看社区成员的杰出贡献", tags: ["社区", "贡献"] },
-    { id: 14, title: "合作机会", content: "寻找项目合作伙伴和机会", tags: ["合作", "机会"] }
+    { id: 8, title: "活动日历", content: "即将举行的线上和线下活动", tags: ["活动", "日历"] },
   ],
   profile: [
     { id: 1, title: "个人资料", content: "更新您的个人信息和联系方式", tags: ["个人", "资料"] },
@@ -69,6 +56,42 @@ const nextSetTitles = {
   settings: "高级设置"
 };
 
+// 存储每个视图的当前页码和已加载的卡片
+const viewStates = {};
+
+/**
+ * 初始化视图状态
+ * @param {string} viewId - 视图ID
+ */
+function initViewState(viewId) {
+  if (!viewStates[viewId]) {
+    viewStates[viewId] = {
+      currentPage: 1,
+      loadedCards: [],
+      totalLoaded: 0
+    };
+  }
+}
+
+/**
+ * 获取指定视图的当前页码
+ * @param {string} viewId - 视图ID
+ * @returns {number} - 当前页码
+ */
+function getCurrentPage(viewId) {
+  initViewState(viewId);
+  return viewStates[viewId].currentPage;
+}
+
+/**
+ * 增加指定视图的页码
+ * @param {string} viewId - 视图ID
+ */
+function incrementPage(viewId) {
+  initViewState(viewId);
+  viewStates[viewId].currentPage += 1;
+}
+
 /**
  * 获取指定视图的所有卡片
  * @param {string} viewId - 视图ID
@@ -84,8 +107,44 @@ export function getCardsForView(viewId) {
  * @returns {Array} - 卡片数组
  */
 export function getNextCardsForView(viewId) {
-  const nextSetKey = `${viewId}_next`;
-  return cardsData[nextSetKey] || [];
+  initViewState(viewId);
+  const allCards = cardsData[viewId] || [];
+  const currentPage = getCurrentPage(viewId);
+  const startIndex = currentPage * CARDS_PER_PAGE;
+  const endIndex = startIndex + CARDS_PER_PAGE;
+  const nextCards = allCards.slice(startIndex, endIndex);
+  
+  if (nextCards.length > 0) {
+    incrementPage(viewId);
+    viewStates[viewId].totalLoaded += nextCards.length;
+  }
+  
+  return nextCards;
+}
+
+/**
+ * 检查是否还有更多卡片可加载
+ * @param {string} viewId - 视图ID
+ * @returns {boolean} - 是否还有更多卡片
+ */
+export function hasMoreCards(viewId) {
+  const allCards = cardsData[viewId] || [];
+  const totalLoaded = viewStates[viewId]?.totalLoaded || 0;
+  return totalLoaded < allCards.length;
+}
+
+/**
+ * 重置指定视图的状态
+ * @param {string} viewId - 视图ID
+ */
+export function resetViewState(viewId) {
+  if (viewStates[viewId]) {
+    viewStates[viewId] = {
+      currentPage: 1,
+      loadedCards: [],
+      totalLoaded: 0
+    };
+  }
 }
 
 /**
@@ -100,5 +159,7 @@ export function getNextSetTitle(viewId) {
 export default {
   getCardsForView,
   getNextCardsForView,
-  getNextSetTitle
+  getNextSetTitle,
+  resetViewState,
+  hasMoreCards
 };

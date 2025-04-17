@@ -1,7 +1,7 @@
 <template>
   <div 
     class="card" 
-    @click="$emit('click', data)"
+    @click="handleCardClick"
   >
     <h3>{{ data.title }}</h3>
     <p>{{ data.content }}</p>
@@ -20,7 +20,14 @@ export default {
       required: true
     }
   },
-  emits: ['click']
+  methods: {
+    handleCardClick() {
+      // 显示提示框
+      alert('卡片被点击了！');
+      // 触发点击事件，让父组件知道卡片被点击了
+      this.$emit('click', this.data);
+    }
+  }
 }
 </script>
 
@@ -30,7 +37,7 @@ export default {
   border-radius: 18px;
   background: var(--md-sys-color-surface-container);
   backdrop-filter: blur(15px);
-  box-shadow: 0 2px 6px var(--md-sys-color-shadow);
+  /* box-shadow: 0 2px 6px var(--md-sys-color-shadow); */
   transition: all 0.3s ease;
   cursor: pointer;
   max-width: 100%;
