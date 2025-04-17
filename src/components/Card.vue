@@ -44,7 +44,7 @@ export default {
   width: 100%;
   box-sizing: border-box;
   min-width: 280px; 
-  border: 1px solid var(--md-sys-color-outline);
+  border: 2px solid var(--md-sys-color-outline);
 }
 
 .card:hover {
