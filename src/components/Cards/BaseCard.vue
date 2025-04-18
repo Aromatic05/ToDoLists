@@ -35,5 +35,5 @@ export default {
 </script>
 
 <style>
-@import '../styles/card.css';
+@import '@/styles/card.css';
 </style>

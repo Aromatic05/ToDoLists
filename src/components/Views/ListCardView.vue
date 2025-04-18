@@ -15,7 +15,7 @@
 </template>
 
 <script>
-import BaseCard from './BaseCard.vue';
+import BaseCard from '@/components/Cards/BaseCard.vue';
 
 export default {
   name: 'ListCardView',

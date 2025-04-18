@@ -44,7 +44,7 @@
 
 <script>
 import '@mdi/font/css/materialdesignicons.css';
-import ThemeService from '../services/ThemeService';
+import ThemeService from '@/services/ThemeService';
 
 export default {
   name: 'FloatingButtons',
@@ -57,10 +57,11 @@ export default {
   data() {
     return {
       showThemeOptions: false,
-      currentView: "timeView",
+      currentView: "this.activeView",
       currentTheme: "Green",
       isDarkMode: false,
       views: [
+        { id: "home", name: "首页", icon: "mdi-home" },
         { id: "timeView", name: "时间视图", icon: "mdi-calendar-clock" },
         { id: "orderView", name: "排序视图", icon: "mdi-sort" },
         { id: "settings", name: "设置", icon: "mdi-cog" },

@@ -28,11 +28,11 @@
 </template>
 
 <script>
-import BaseList from './BaseList.vue';
-import AddList from './AddList.vue';
-import CardView from './CardView.vue';
-import ListCardView from './ListCardView.vue';
-import ListDataService from '../services/ListDataService';
+import BaseList from '@/components/Lists/BaseList.vue';
+import AddList from '@/components/Lists/AddList.vue';
+import CardView from '@/components/Views/CardView.vue';
+import ListCardView from '@/components/Views/ListCardView.vue';
+import ListDataService from '@/services/ListDataService';
 
 export default {
   name: 'ListView',

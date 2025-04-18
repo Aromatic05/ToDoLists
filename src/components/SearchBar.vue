@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import KnowledgeBaseService from '../services/KnowledgeBaseService';
+import KnowledgeBaseService from '@/services/KnowledgeBaseService';
 
 export default {
   name: 'SearchBar',

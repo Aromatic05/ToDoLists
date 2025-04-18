@@ -1,21 +1,14 @@
 <template>
   <div class="app-container">
-    <Sidebar 
-      :activeView="currentView"
-      @view-change="currentView = $event"
-      @theme-change="handleThemeChange"
-      @toggle-dark-mode="handleDarkModeToggle"
-    />
-    
+    <Sidebar :activeView="currentView" @view-change="currentView = $event" @theme-change="handleThemeChange"
+      @toggle-dark-mode="handleDarkModeToggle" />
+
     <main class="content">
       <div class="content-wrapper">
-        <SearchBar 
-          v-model:search-query="searchQuery"
-          @select-result="selectSearchResult"
-        />
+        <SearchBar v-model:search-query="searchQuery" @select-result="selectSearchResult" />
 
         <h2 class="view-title">{{ getCurrentViewName() }}</h2>
-        
+
         <!-- Search Results View -->
         <div v-if="currentView === 'search'" class="search-view">
           <div v-if="selectedResult" class="selected-result">
@@ -25,13 +18,10 @@
             <p>请输入关键词搜索知识库</p>
           </div>
         </div>
-        
+
         <!-- Dynamic Views -->
         <div class="view-content">
-          <component 
-            :is="getViewComponent(currentView)" 
-            :viewId="currentView" 
-          />
+          <component :is="getViewComponent(currentView)" :viewId="currentView" />
         </div>
       </div>
     </main>
@@ -39,11 +29,10 @@
 </template>
 
 <script>
-import Sidebar from './components/Sidebar.vue';
-import SearchBar from './components/SearchBar.vue';
-import CardView from './components/CardView.vue';
-import ListView from './components/ListView.vue';
-import BaseCard from './components/BaseCard.vue';
+import Sidebar from '@/components/Sidebar.vue';
+import SearchBar from '@/components/SearchBar.vue';
+import CardView from '@/components/Views/CardView.vue';
+import ListView from '@/components/Views/ListView.vue';
 
 export default {
   name: 'App',
@@ -52,13 +41,12 @@ export default {
     SearchBar,
     CardView,
     ListView,
-    BaseCard
   },
   data() {
     return {
       // 视图状态
-      currentView: "timeView",
-      
+      currentView: "home",
+
       // 搜索状态
       searchQuery: "",
       selectedResult: null,
@@ -70,7 +58,9 @@ export default {
         'search': { name: '知识库', type: 'card' },
         'profile': { name: '个人信息', type: 'card' },
         'favorites': { name: '收藏', type: 'card' },
-        'settings': { name: '设置', type: 'card' }
+        'settings': { name: '设置', type: 'card' },
+        "timeView": { name: "时间视图", icon: "mdi-calendar-clock" },
+        "orderView": {name: "排序视图", icon: "mdi-sort" },
       }
     };
   },
@@ -79,7 +69,7 @@ export default {
     getCurrentViewName() {
       return this.viewNames[this.currentView]?.name || this.currentView;
     },
-    
+
     // 选择搜索结果
     selectSearchResult(result) {
       this.selectedResult = result;

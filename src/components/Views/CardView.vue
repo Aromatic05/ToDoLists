@@ -31,8 +31,8 @@
 </template>
 
 <script>
-import BaseCard from './BaseCard.vue';
-import CardDataService from '../services/CardDataService';
+import BaseCard from '@/components/Cards/BaseCard.vue';
+import CardDataService from '@/services/CardDataService';
 
 export default {
   name: 'CardView',
