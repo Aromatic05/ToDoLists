@@ -2,12 +2,20 @@
 
 // 主题列表
 const themes = [
-  { name: "Red", light: "red-light", dark: "red-dark" },
-  { name: "Green", light: "green-light", dark: "green-dark" },
-  { name: "Blue", light: "blue-light", dark: "blue-dark" },
-  { name: "Yellow", light: "yellow-light", dark: "yellow-dark" },
-  { name: "Purple", light: "purple-light", dark: "purple-dark" }
+  { name: "SkyBlue", light: "skyblue-light", dark: "skyblue-dark", color: "#1478DC" },
+  { name: "Red", light: "red-light", dark: "red-dark", color: "#F44336" },
+  { name: "Green", light: "green-light", dark: "green-dark", color: "#4CAF50" },
+  { name: "Blue", light: "blue-light", dark: "blue-dark", color: "#2196F3" },
+  { name: "Yellow", light: "yellow-light", dark: "yellow-dark", color: "#FFC107" },
+  { name: "Purple", light: "purple-light", dark: "purple-dark", color: "#9C27B0" },
+  { name: "Ivory", light: "ivory-light", dark: "ivory-dark", color: "#FFFFF0" },
 ];
+
+// Theme color mapping for quick access
+const themeColors = themes.reduce((acc, theme) => {
+  acc[theme.name] = theme.color;
+  return acc;
+}, {});
 
 /**
  * 获取系统主题偏好（深色/浅色）
@@ -55,6 +63,15 @@ export function getThemeClassName(themeName, isDarkMode) {
 }
 
 /**
+ * 获取主题对应的颜色值
+ * @param {string} themeName - 主题名称
+ * @returns {string} - 主题颜色值
+ */
+export function getThemeColor(themeName) {
+  return themeColors[themeName] || themeColors.Green;
+}
+
+/**
  * 获取所有可用主题
  * @returns {Array} - 主题列表
  */
@@ -64,9 +81,11 @@ export function getThemes() {
 
 export default {
   themes,
+  themeColors,
   getSystemThemePreference,
   loadThemePreference,
   saveThemePreference,
   getThemeClassName,
+  getThemeColor,
   getThemes
 };

@@ -57,24 +57,15 @@ export default {
   data() {
     return {
       showThemeOptions: false,
-      currentView: this.activeView,
+      currentView: "timeView",
       currentTheme: "Green",
       isDarkMode: false,
       views: [
-        { id: "home", name: "首页", icon: "mdi-home", type: "list" },
-        { id: "discover", name: "发现", icon: "mdi-compass", type: "card" },
-        { id: "search", name: "知识库", icon: "mdi-book", type: "card" },
-        { id: "profile", name: "个人信息", icon: "mdi-account", type: "card" },
-        { id: "favorites", name: "收藏", icon: "mdi-star", type: "card" },
-        { id: "settings", name: "设置", icon: "mdi-cog", type: "card" },
+        { id: "timeView", name: "时间视图", icon: "mdi-calendar-clock" },
+        { id: "orderView", name: "排序视图", icon: "mdi-sort" },
+        { id: "settings", name: "设置", icon: "mdi-cog" },
       ],
-      availableThemes: [
-        { name: 'Green', color: '#4CAF50' },
-        { name: 'Red', color: '#F44336' },
-        { name: 'Blue', color: '#2196F3' },
-        { name: 'Yellow', color: '#FFC107' },
-        { name: 'Purple', color: '#9C27B0' }
-      ]
+      availableThemes: ThemeService.getThemes()
     };
   },
   watch: {
@@ -117,14 +108,7 @@ export default {
     },
     
     getThemeColor(themeName) {
-      const themeColors = {
-        'Green': '#4CAF50',
-        'Red': '#F44336',
-        'Blue': '#2196F3',
-        'Yellow': '#FFC107',
-        'Purple': '#9C27B0'
-      };
-      return themeColors[themeName] || themeColors['Green'];
+      return ThemeService.getThemeColor(themeName);
     },
 
     applyTheme() {
@@ -242,6 +226,167 @@ export default {
 
 .theme-option:hover {
   background: var(--md-sys-color-surface-variant);
+}
+
+.theme-option.active {
+  background: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+}
+</style>
+
+// 实现非线性切换动画
+<style scoped>
+.floating-buttons-container {
+  position: fixed;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.nav-buttons {
+  position: fixed;
+  top: 50%;
+  left: 20px;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  z-index: 100;
+}
+
+.theme-buttons {
+  position: fixed;
+  bottom: 20px;
+  left: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 100;
+}
+
+.circle-button {
+  width: 48px;
+  height: 48px;
+  border: none;
+  border-radius: 50%;
+  font-size: 18px;
+  background: var(--md-sys-color-surface);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 4px 10px var(--md-sys-color-shadow);
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); /* 非线性弹性动画 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative; /* 添加相对定位用于动画效果 */
+}
+
+.circle-button:hover {
+  transform: scale(1.08);
+  box-shadow: 0 6px 14px var(--md-sys-color-primary);
+}
+
+.circle-button.active {
+  background: var(--md-sys-color-primary-container);
+  color: var(--md-sys-color-on-primary-container);
+  box-shadow: 0 4px 12px var(--md-sys-color-primary);
+}
+
+/* 添加按钮动画效果 */
+.nav-button::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--md-sys-color-primary);
+  opacity: 0;
+  transform: scale(0);
+  z-index: -1;
+  transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275), opacity 0.3s ease;
+}
+
+.nav-button.active::before {
+  opacity: 0.2;
+  transform: scale(1.2);
+}
+
+/* 主题按钮动画 */
+.theme-select, .mode-button {
+  overflow: hidden;
+  transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), background-color 0.3s ease;
+}
+
+.theme-select:active, .mode-button:active {
+  transform: scale(0.9);
+}
+
+.mdi {
+  font-size: 24px;
+  color: var(--md-sys-color-on-surface);
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), color 0.3s ease;
+}
+
+.circle-button.active .mdi {
+  color: var(--md-sys-color-on-primary-container);
+  transform: scale(1.1);
+}
+
+.theme-color-circle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid var(--md-sys-color-outline);
+  transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), border-color 0.3s ease;
+}
+
+.theme-select:hover .theme-color-circle {
+  transform: scale(1.1);
+}
+
+.theme-options {
+  position: absolute;
+  bottom: 60px;
+  left: 0;
+  background: var(--md-sys-color-surface);
+  border-radius: 8px;
+  padding: 8px;
+  box-shadow: 0 4px 12px var(--md-sys-color-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  transform-origin: bottom left;
+  animation: scaleIn 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.8);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.theme-option {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px;
+  border-radius: 4px;
+  background: transparent;
+  border: none;
+  color: var(--md-sys-color-on-surface);
+  cursor: pointer;
+  transition: background-color 0.2s, transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.theme-option:hover {
+  background: var(--md-sys-color-surface-variant);
+  transform: translateX(4px);
 }
 
 .theme-option.active {

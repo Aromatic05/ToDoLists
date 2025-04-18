@@ -57,7 +57,7 @@ export default {
   data() {
     return {
       // 视图状态
-      currentView: "home",
+      currentView: "timeView",
       
       // 搜索状态
       searchQuery: "",
