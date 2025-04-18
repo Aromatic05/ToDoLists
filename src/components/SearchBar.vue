@@ -5,10 +5,10 @@
         type="text" 
         v-model="searchInput" 
         placeholder="搜索知识库..." 
-        @keyup.enter="handleSearch" 
+        @keyup.enter="searchKnowledge" 
         class="search-input"
       />
-      <button @click="handleSearch" class="search-button">
+      <button @click="searchKnowledge" class="search-button">
         🔍
       </button>
     </div>
@@ -17,7 +17,7 @@
         v-for="(result, index) in results" 
         :key="index" 
         class="search-result-item" 
-        @click="handleResultSelect(result)"
+        @click="selectSearchResult(result)"
       >
         <h4>{{ result.title }}</h4>
         <p>{{ result.preview }}</p>
@@ -27,26 +27,22 @@
 </template>
 
 <script>
+import KnowledgeBaseService from '../services/KnowledgeBaseService';
+
 export default {
   name: 'SearchBar',
   props: {
-    showResults: {
-      type: Boolean,
-      default: false
-    },
-    results: {
-      type: Array,
-      default: () => []
-    },
     searchQuery: {
       type: String,
       default: ''
     }
   },
-  emits: ['search', 'select-result', 'update:searchQuery'],
+  emits: ['update:searchQuery', 'select-result'],
   data() {
     return {
-      searchInput: this.searchQuery
+      searchInput: this.searchQuery,
+      showResults: false,
+      results: []
     };
   },
   watch: {
@@ -58,11 +54,38 @@ export default {
     }
   },
   methods: {
-    handleSearch() {
-      this.$emit('search', this.searchInput);
+    searchKnowledge(event) {
+      if (this.searchInput.trim() === '') {
+        this.results = [];
+        this.showResults = false;
+        return;
+      }
+      
+      this.results = KnowledgeBaseService.searchKnowledge(this.searchInput);
+      this.showResults = true;
+      
+      // 如果用户按回车键并且有搜索结果，自动选择第一个结果
+      if (event && event.key === 'Enter' && this.results.length > 0) {
+        this.selectSearchResult(this.results[0]);
+      }
     },
-    handleResultSelect(result) {
+    
+    selectSearchResult(result) {
       this.$emit('select-result', result);
+      this.showResults = false;
+    }
+  },
+  mounted() {
+    document.addEventListener('click', this.closeSearchResults);
+  },
+  beforeUnmount() {
+    document.removeEventListener('click', this.closeSearchResults);
+  },
+  methods: {
+    closeSearchResults(event) {
+      if (!event.target.closest('.search-container')) {
+        this.showResults = false;
+      }
     }
   }
 }

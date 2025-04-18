@@ -7,7 +7,7 @@
         :key="view.id" 
         class="circle-button nav-button" 
         :class="{ active: currentView === view.id }"
-        @click="$emit('view-change', view.id)"
+        @click="handleViewChange(view.id)"
       >
         <i :class="['mdi', view.icon]"></i>
       </button>
@@ -28,7 +28,7 @@
             :class="{ active: currentTheme === theme.name }"
             @click="selectTheme(theme.name)"
           >
-            <div class="theme-color-circle" :style="{ background: getThemeColor(theme.name) }"></div>
+            <div class="theme-color-circle" :style="{ background: theme.color }"></div>
             <span>{{ theme.name }}</span>
           </button>
         </div>
@@ -43,67 +43,33 @@
 </template>
 
 <script>
-import ThemeService from '../services/ThemeService';
 import '@mdi/font/css/materialdesignicons.css';
+import ThemeService from '../services/ThemeService';
 
 export default {
   name: 'FloatingButtons',
-  props: {
-    views: {
-      type: Array,
-      required: true
-    },
-    currentView: {
-      type: String,
-      required: true
-    }
-  },
   data() {
     return {
       showThemeOptions: false,
-      currentTheme: 'Green',
-      isDarkMode: false
+      currentView: "home",
+      currentTheme: "Green",
+      isDarkMode: false,
+      views: [
+        { id: "home", name: "首页", icon: "mdi-home" },
+        { id: "discover", name: "发现", icon: "mdi-compass" },
+        { id: "search", name: "知识库", icon: "mdi-book" },
+        { id: "profile", name: "个人信息", icon: "mdi-account" },
+        { id: "favorites", name: "收藏", icon: "mdi-star" },
+        { id: "settings", name: "设置", icon: "mdi-cog" },
+      ],
+      availableThemes: [
+        { name: 'Green', color: '#4CAF50' },
+        { name: 'Red', color: '#F44336' },
+        { name: 'Blue', color: '#2196F3' },
+        { name: 'Yellow', color: '#FFC107' },
+        { name: 'Purple', color: '#9C27B0' }
+      ]
     };
-  },
-  computed: {
-    availableThemes() {
-      return ThemeService.getThemes();
-    }
-  },
-  methods: {
-    selectTheme(themeName) {
-      this.currentTheme = themeName;
-      this.showThemeOptions = false;
-      ThemeService.saveThemePreference(themeName, this.isDarkMode);
-      this.applyTheme();
-      this.$emit('theme-change', themeName);
-    },
-    toggleDarkMode() {
-      this.isDarkMode = !this.isDarkMode;
-      ThemeService.saveThemePreference(this.currentTheme, this.isDarkMode);
-      this.applyTheme();
-      this.$emit('toggle-dark-mode', this.isDarkMode);
-    },
-    getThemeColor(themeName) {
-      const themeColors = {
-        'Green': '#4CAF50',
-        'Red': '#F44336',
-        'Blue': '#2196F3',
-        'Yellow': '#FFC107',
-        'Purple': '#9C27B0'
-      };
-      return themeColors[themeName] || themeColors['Green'];
-    },
-    applyTheme() {
-      const themeClass = ThemeService.getThemeClassName(this.currentTheme, this.isDarkMode);
-      // 移除所有主题类
-      document.documentElement.classList.remove(...ThemeService.themes.flatMap(t => [t.light, t.dark]));
-      // 添加当前主题类
-      document.documentElement.classList.add(themeClass);
-      // 确保背景颜色更新
-      document.documentElement.style.backgroundColor = getComputedStyle(document.documentElement)
-        .getPropertyValue('--md-sys-color-background');
-    }
   },
   mounted() {
     // 加载主题偏好
@@ -117,6 +83,49 @@ export default {
       this.isDarkMode = e.matches;
       this.applyTheme();
     });
+  },
+  methods: {
+    handleViewChange(viewId) {
+      this.currentView = viewId;
+      this.$emit('view-change', viewId);
+    },
+    
+    selectTheme(themeName) {
+      this.currentTheme = themeName;
+      this.showThemeOptions = false;
+      ThemeService.saveThemePreference(themeName, this.isDarkMode);
+      this.applyTheme();
+      this.$emit('theme-change', themeName);
+    },
+    
+    toggleDarkMode() {
+      this.isDarkMode = !this.isDarkMode;
+      ThemeService.saveThemePreference(this.currentTheme, this.isDarkMode);
+      this.applyTheme();
+      this.$emit('toggle-dark-mode', this.isDarkMode);
+    },
+    
+    getThemeColor(themeName) {
+      const themeColors = {
+        'Green': '#4CAF50',
+        'Red': '#F44336',
+        'Blue': '#2196F3',
+        'Yellow': '#FFC107',
+        'Purple': '#9C27B0'
+      };
+      return themeColors[themeName] || themeColors['Green'];
+    },
+
+    applyTheme() {
+      const themeClass = ThemeService.getThemeClassName(this.currentTheme, this.isDarkMode);
+      // 移除所有主题类
+      document.documentElement.classList.remove(...ThemeService.themes.flatMap(t => [t.light, t.dark]));
+      // 添加当前主题类
+      document.documentElement.classList.add(themeClass);
+      // 确保背景颜色更新
+      document.documentElement.style.backgroundColor = getComputedStyle(document.documentElement)
+        .getPropertyValue('--md-sys-color-background');
+    }
   }
 };
 </script>
