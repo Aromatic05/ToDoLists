@@ -1,29 +1,15 @@
 <template>
   <div 
-    class="card-base"
+    class="card-base" 
     @click="handleCardClick"
   >
     <h3 class="card-title">{{ data.title }}</h3>
     <p class="card-content">{{ data.content }}</p>
-    <div v-if="data.tags?.length" class="card-tags">
+    <div v-if="data.tags && data.tags.length > 0" class="card-tags">
       <span v-for="(tag, i) in data.tags" :key="i" class="card-tag">{{ tag }}</span>
     </div>
   </div>
 </template>
-
-
-<!-- <template>
-  <div 
-    class="card" 
-    @click="handleCardClick"
-  >
-    <h3>{{ data.title }}</h3>
-    <p>{{ data.content }}</p>
-    <div v-if="data.tags && data.tags.length > 0" class="card-tags">
-      <span v-for="(tag, i) in data.tags" :key="i" class="tag">{{ tag }}</span>
-    </div>
-  </div>
-</template> -->
 
 <script>
 export default {
@@ -31,7 +17,10 @@ export default {
   props: {
     data: {
       type: Object,
-      required: true
+      required: true,
+      validator: (value) => {
+        return value.id && value.title && value.content;
+      }
     }
   },
   methods: {
@@ -46,9 +35,5 @@ export default {
 </script>
 
 <style>
-/* 保留需要覆盖的样式 */
-@import '../styles/card.css' ;
-.card-base {
-  backdrop-filter: blur(15px);
-}
+@import '../styles/card.css';
 </style>

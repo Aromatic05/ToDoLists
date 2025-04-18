@@ -48,19 +48,25 @@ import ThemeService from '../services/ThemeService';
 
 export default {
   name: 'FloatingButtons',
+  props: {
+    activeView: {
+      type: String,
+      default: 'home'
+    }
+  },
   data() {
     return {
       showThemeOptions: false,
-      currentView: "home",
+      currentView: this.activeView,
       currentTheme: "Green",
       isDarkMode: false,
       views: [
-        { id: "home", name: "首页", icon: "mdi-home" },
-        { id: "discover", name: "发现", icon: "mdi-compass" },
-        { id: "search", name: "知识库", icon: "mdi-book" },
-        { id: "profile", name: "个人信息", icon: "mdi-account" },
-        { id: "favorites", name: "收藏", icon: "mdi-star" },
-        { id: "settings", name: "设置", icon: "mdi-cog" },
+        { id: "home", name: "首页", icon: "mdi-home", type: "list" },
+        { id: "discover", name: "发现", icon: "mdi-compass", type: "card" },
+        { id: "search", name: "知识库", icon: "mdi-book", type: "card" },
+        { id: "profile", name: "个人信息", icon: "mdi-account", type: "card" },
+        { id: "favorites", name: "收藏", icon: "mdi-star", type: "card" },
+        { id: "settings", name: "设置", icon: "mdi-cog", type: "card" },
       ],
       availableThemes: [
         { name: 'Green', color: '#4CAF50' },
@@ -70,6 +76,11 @@ export default {
         { name: 'Purple', color: '#9C27B0' }
       ]
     };
+  },
+  watch: {
+    activeView(newVal) {
+      this.currentView = newVal;
+    }
   },
   mounted() {
     // 加载主题偏好
