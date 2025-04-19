@@ -2,14 +2,8 @@
   <div class="color-picker" v-if="show">
     <h3>{{ isDarkMode ? '深色背景' : '浅色背景' }}</h3>
     <div class="color-options">
-      <div 
-        v-for="(color, index) in colors" 
-        :key="index" 
-        class="color-option" 
-        :style="{ background: color.value }"
-        :class="{ active: currentColor === color.value }"
-        @click="$emit('color-change', color.value)"
-      ></div>
+      <div v-for="(color, index) in colors" :key="index" class="color-option" :style="{ background: color.value }"
+        :class="{ active: currentColor === color.value }" @click="$emit('color-change', color.value)"></div>
     </div>
   </div>
 </template>
@@ -47,7 +41,7 @@ export default {
   width: 220px;
   padding: 18px;
   border-radius: 20px;
-  background:var(--card-bg, rgba(255, 255, 255, 0.7));
+  background: var(--card-bg, rgba(255, 255, 255, 0.7));
   backdrop-filter: blur(15px);
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
   z-index: 99;
@@ -60,7 +54,7 @@ export default {
   margin-bottom: 14px;
   font-size: 16px;
   font-weight: 500;
-  color: var(--text-color-primary,#333);
+  color: var(--text-color-primary, #333);
   transition: color 0.5s ease;
 }
 
@@ -94,6 +88,7 @@ export default {
     transform: translateY(10px);
     opacity: 0;
   }
+
   to {
     transform: translateY(0);
     opacity: 1;

@@ -101,12 +101,12 @@ function getNextCardsForView(viewId) {
   const startIndex = currentPage * CARDS_PER_PAGE;
   const endIndex = startIndex + CARDS_PER_PAGE;
   const nextCards = allCards.slice(startIndex, endIndex);
-  
+
   if (nextCards.length > 0) {
     incrementPage(viewId);
     viewStates[viewId].totalLoaded += nextCards.length;
   }
-  
+
   return nextCards;
 }
 

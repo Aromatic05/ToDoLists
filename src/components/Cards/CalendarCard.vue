@@ -1,22 +1,14 @@
 <template>
-  <BaseCard 
-    class="calendar-card"
-    :data="calendarData"
-    @click="handleCalendarClick"
-  >
+  <BaseCard class="calendar-card" :data="calendarData" @click="handleCalendarClick">
     <div class="calendar-header">
-      <button @click="prevMonth"><</button>
-      <span>{{ currentMonth }}</span>
-      <button @click="nextMonth">></button>
+      <button @click="prevMonth">
+        << </button>
+          <span>{{ currentMonth }}</span>
+          <button @click="nextMonth">></button>
     </div>
     <div class="calendar-grid">
-      <div 
-        v-for="day in visibleDays" 
-        :key="day.date"
-        class="calendar-day"
-        :class="{ 'active': day.isActive }"
-        @click="selectDate(day.date)"
-      >
+      <div v-for="day in visibleDays" :key="day.date" class="calendar-day" :class="{ 'active': day.isActive }"
+        @click="selectDate(day.date)">
         {{ day.date.getDate() }}
       </div>
     </div>
@@ -38,15 +30,15 @@ export default defineComponent({
   },
   setup(props) {
     const currentDate = ref(props.initialDate);
-    
+
     // 日历逻辑...
-    
+
     return {
       currentMonth: '2024年4月',
       visibleDays: [],
-      prevMonth: () => {},
-      nextMonth: () => {},
-      selectDate: () => {}
+      prevMonth: () => { },
+      nextMonth: () => { },
+      selectDate: () => { }
     };
   }
 });

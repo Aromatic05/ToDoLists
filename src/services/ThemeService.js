@@ -2,13 +2,13 @@
 
 // 主题列表
 const themes = [
-  { name: "SkyBlue", light: "skyblue-light", dark: "skyblue-dark", color: "#1478DC" },
   { name: "Red", light: "red-light", dark: "red-dark", color: "#F44336" },
-  { name: "Green", light: "green-light", dark: "green-dark", color: "#4CAF50" },
-  { name: "Blue", light: "blue-light", dark: "blue-dark", color: "#2196F3" },
   { name: "Yellow", light: "yellow-light", dark: "yellow-dark", color: "#FFC107" },
+  { name: "Ivory", light: "ivory-light", dark: "ivory-dark", color: "#AA9B6E" },
+  { name: "Green", light: "green-light", dark: "green-dark", color: "#4CAF50" },
+  { name: "SkyBlue", light: "skyblue-light", dark: "skyblue-dark", color: "#1478DC" },
+  { name: "Blue", light: "blue-light", dark: "blue-dark", color: "#2196F3" },
   { name: "Purple", light: "purple-light", dark: "purple-dark", color: "#9C27B0" },
-  { name: "Ivory", light: "ivory-light", dark: "ivory-dark", color: "#FFFFF0" },
 ];
 
 // Theme color mapping for quick access
@@ -33,7 +33,7 @@ export function loadThemePreference() {
   const storedTheme = localStorage.getItem('theme-name') || themes[0].name;
   const storedPreference = localStorage.getItem('dark-mode');
   const isDarkMode = storedPreference !== null ? storedPreference === 'true' : getSystemThemePreference();
-  
+
   return {
     themeName: storedTheme,
     isDarkMode

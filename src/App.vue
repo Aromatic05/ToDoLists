@@ -60,7 +60,7 @@ export default {
         'favorites': { name: '收藏', type: 'card' },
         'settings': { name: '设置', type: 'card' },
         "timeView": { name: "时间视图", icon: "mdi-calendar-clock" },
-        "orderView": {name: "排序视图", icon: "mdi-sort" },
+        "orderView": { name: "排序视图", icon: "mdi-sort" },
       }
     };
   },
@@ -87,18 +87,6 @@ export default {
       };
       return componentMap[viewType];
     },
-
-    // 处理主题变更
-    handleThemeChange(themeName) {
-      console.log('Theme changed to:', themeName);
-      // 这里可以添加主题变更的具体逻辑
-    },
-
-    // 处理暗黑模式切换
-    handleDarkModeToggle(isDarkMode) {
-      console.log('Dark mode:', isDarkMode);
-      // 这里可以添加暗黑模式切换的具体逻辑
-    }
   }
 };
 </script>

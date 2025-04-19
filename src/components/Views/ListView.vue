@@ -2,26 +2,14 @@
   <div class="list-view-container" ref="container">
     <div class="list-content">
       <div class="list-container">
-        <div 
-          v-for="(item, index) in items" 
-          :key="item.id" 
-          class="list-wrapper"
-        >
-          <BaseList 
-            :data="item" 
-            :isActive="selectedListId === item.id"
-            @click="handleItemClick"
-          />
+        <div v-for="(item, index) in items" :key="item.id" class="list-wrapper">
+          <BaseList :data="item" :isActive="selectedListId === item.id" @click="handleItemClick" />
         </div>
       </div>
       <AddList @click="handleAddClick" />
     </div>
     <div class="card-preview">
-      <ListCardView 
-        v-if="selectedListId" 
-        :cards="selectedCards" 
-        @card-click="handleCardClick"
-      />
+      <ListCardView v-if="selectedListId" :cards="selectedCards" @card-click="handleCardClick" />
       <CardView v-else :viewId="viewId" />
     </div>
   </div>
@@ -116,7 +104,7 @@ export default {
 }
 
 .list-content {
-  width: 280px;
+  width: 300px;
   flex-shrink: 0;
 }
 
@@ -141,4 +129,4 @@ export default {
 .list-wrapper:hover {
   transform: translateX(4px);
 }
-</style> 
+</style>

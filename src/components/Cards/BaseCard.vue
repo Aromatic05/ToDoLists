@@ -1,8 +1,5 @@
 <template>
-  <div 
-    class="card-base" 
-    @click="handleCardClick"
-  >
+  <div class="card-base" @click="handleCardClick">
     <h3 class="card-title">{{ data.title }}</h3>
     <p class="card-content">{{ data.content }}</p>
     <div v-if="data.tags && data.tags.length > 0" class="card-tags">

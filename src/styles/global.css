@@ -1,37 +1,45 @@
 :root {
-    /* ===== 字体配置 ===== */
-    --font-sans: "Inter var", "Inter", -apple-system, BlinkMacSystemFont, 
-                 "Segoe UI", "PingFang SC", "Hiragino Sans GB", 
-                 "Microsoft YaHei", sans-serif;
-    --font-serif: "Noto Serif SC", "Source Han Serif CN", 
-                  "SimSun", serif;
-    --font-mono: "Fira Code", "Cascadia Code", "Consolas", 
-                 "Courier New", monospace;
-    
-    /* 字体大小阶梯 (基于rem) */
-    --text-xs: 0.75rem;    /* 12px */
-    --text-sm: 0.875rem;   /* 14px */
-    --text-base: 1rem;     /* 16px */
-    --text-lg: 1.125rem;   /* 18px */
-    --text-xl: 1.25rem;    /* 20px */
-    --text-2xl: 1.5rem;    /* 24px */
-    
-    /* 亮色模式下的字体粗细 */
-    --font-weight-normal: 400;
-    --font-weight-bold: 600;
-  }
-  
-  body {
-    font-family: var(--font-sans);
-    font-weight: var(--font-weight-normal);
-    line-height: 1.6;
-  }
-  
-  h1, h2, h3 {
-    font-family: var(--font-serif);
-    font-weight: var(--font-weight-bold);
-  }
-  
-  code {
-    font-family: var(--font-mono);
-  }
+  /* ===== 字体配置 ===== */
+  --font-sans: "Inter var", "Inter", -apple-system, BlinkMacSystemFont,
+    "Segoe UI", "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", sans-serif;
+  --font-serif: "Noto Serif SC", "Source Han Serif CN",
+    "SimSun", serif;
+  --font-mono: "Fira Code", "Cascadia Code", "Consolas",
+    "Courier New", monospace;
+
+  /* 字体大小阶梯 (基于rem) */
+  --text-xs: 0.75rem;
+  /* 12px */
+  --text-sm: 0.875rem;
+  /* 14px */
+  --text-base: 1rem;
+  /* 16px */
+  --text-lg: 1.125rem;
+  /* 18px */
+  --text-xl: 1.25rem;
+  /* 20px */
+  --text-2xl: 1.5rem;
+  /* 24px */
+
+  /* 亮色模式下的字体粗细 */
+  --font-weight-normal: 400;
+  --font-weight-bold: 600;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-weight: var(--font-weight-normal);
+  line-height: 1.6;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-serif);
+  font-weight: var(--font-weight-bold);
+}
+
+code {
+  font-family: var(--font-mono);
+}

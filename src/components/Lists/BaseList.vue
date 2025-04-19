@@ -1,10 +1,6 @@
 <template>
   <div class="list-item-container">
-    <div 
-      class="list-item"
-      :class="[data.type || 'base', { 'is-active': isActive }]"
-      @click="handleClick"
-    >
+    <div class="list-item" :class="[data.type || 'base', { 'is-active': isActive }]" @click="handleClick">
       <div class="list-icon">
         <i :class="['mdi', data.icon]"></i>
       </div>
@@ -107,4 +103,4 @@ export default {
 .is-active .list-title {
   color: var(--md-sys-color-on-primary-container);
 }
-</style> 
+</style>

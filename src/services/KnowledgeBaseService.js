@@ -43,13 +43,13 @@ export function searchKnowledge(query) {
   if (!query || query.trim() === '') {
     return [];
   }
-  
+
   const lowercaseQuery = query.toLowerCase();
-  
+
   // 根据标题、内容和标签进行搜索
   return knowledgeBaseData.filter(item => {
     return (
-      item.title.toLowerCase().includes(lowercaseQuery) || 
+      item.title.toLowerCase().includes(lowercaseQuery) ||
       item.content.toLowerCase().includes(lowercaseQuery) ||
       item.tags.some(tag => tag.toLowerCase().includes(lowercaseQuery))
     );

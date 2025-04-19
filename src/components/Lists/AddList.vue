@@ -1,8 +1,5 @@
 <template>
-  <div 
-    class="add-list-item"
-    @click="handleClick"
-  >
+  <div class="add-list-item" @click="handleClick">
     <div class="list-icon">
       <i class="mdi mdi-plus"></i>
     </div>
@@ -58,4 +55,4 @@ export default {
   font-size: 14px;
   color: var(--md-sys-color-on-surface);
 }
-</style> 
+</style>

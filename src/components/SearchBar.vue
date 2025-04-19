@@ -1,24 +1,15 @@
 <template>
   <div class="search-container">
     <div class="search-box">
-      <input 
-        type="text" 
-        v-model="searchInput" 
-        placeholder="搜索知识库..." 
-        @keyup.enter="searchKnowledge" 
-        class="search-input"
-      />
+      <input type="text" v-model="searchInput" placeholder="搜索知识库..." @keyup.enter="searchKnowledge"
+        class="search-input" />
       <button @click="searchKnowledge" class="search-button">
-        🔍
+        <i class="mdi mdi-magnify"></i>
       </button>
     </div>
     <div class="search-results" v-if="showResults && results.length > 0">
-      <div 
-        v-for="(result, index) in results" 
-        :key="index" 
-        class="search-result-item" 
-        @click="selectSearchResult(result)"
-      >
+      <div v-for="(result, index) in results" :key="index" class="search-result-item"
+        @click="selectSearchResult(result)">
         <h4>{{ result.title }}</h4>
         <p>{{ result.preview }}</p>
       </div>
@@ -60,16 +51,16 @@ export default {
         this.showResults = false;
         return;
       }
-      
+
       this.results = KnowledgeBaseService.searchKnowledge(this.searchInput);
       this.showResults = true;
-      
+
       // 如果用户按回车键并且有搜索结果，自动选择第一个结果
       if (event && event.key === 'Enter' && this.results.length > 0) {
         this.selectSearchResult(this.results[0]);
       }
     },
-    
+
     selectSearchResult(result) {
       this.$emit('select-result', result);
       this.showResults = false;
@@ -102,7 +93,7 @@ export default {
 .search-box {
   display: flex;
   align-items: center;
-  width: 100%;
+  width: 90%;
   border-radius: 24px;
   background: var(--md-sys-color-surface-container);
   backdrop-filter: blur(10px);
@@ -191,6 +182,7 @@ export default {
     opacity: 0;
     transform: translateY(-10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);

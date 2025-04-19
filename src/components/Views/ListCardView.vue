@@ -4,12 +4,7 @@
       暂无卡片
     </div>
     <div v-else class="card-grid">
-      <BaseCard
-        v-for="card in cards"
-        :key="card.id"
-        :data="card"
-        @click="handleCardClick"
-      />
+      <BaseCard v-for="card in cards" :key="card.id" :data="card" @click="handleCardClick" />
     </div>
   </div>
 </template>
@@ -69,4 +64,4 @@ export default {
   color: var(--md-sys-color-on-surface-variant);
   font-size: 14px;
 }
-</style> 
+</style>

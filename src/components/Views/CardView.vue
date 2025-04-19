@@ -2,20 +2,9 @@
   <div class="card-view-container">
     <div class="cards-scroll-container">
       <div class="cards-container">
-        <transition-group 
-          name="card" 
-          tag="div" 
-          class="cards-wrapper"
-          @before-enter="beforeEnter"
-          @enter="enter"
-          @leave="leave"
-        >
-          <div 
-            v-for="(card, index) in cards" 
-            :key="card.id" 
-            class="card-wrapper"
-            :data-index="index"
-          >
+        <transition-group name="card" tag="div" class="cards-wrapper" @before-enter="beforeEnter" @enter="enter"
+          @leave="leave">
+          <div v-for="(card, index) in cards" :key="card.id" class="card-wrapper" :data-index="index">
             <BaseCard :data="card" @click="handleCardClick" />
           </div>
         </transition-group>
