@@ -106,11 +106,12 @@ export default {
 
 .cards-container {
   flex: 1;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 20px;
   padding: 0;
   min-height: min-content;
+  width: 100%;
 }
 
 .cards-wrapper {

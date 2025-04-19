@@ -42,6 +42,8 @@ export default {
 .list-item-container {
   width: 100%;
   margin-bottom: 8px;
+  display: flex;
+  justify-content: center;
 }
 
 .list-item {
@@ -53,7 +55,7 @@ export default {
   backdrop-filter: blur(10px);
   cursor: pointer;
   transition: all 0.3s ease;
-  width: 280px;
+  width: 100%;
 }
 
 .list-item:hover {

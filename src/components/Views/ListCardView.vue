@@ -46,14 +46,20 @@ export default {
   width: 100%;
   height: 100%;
   overflow-y: auto;
+  overflow-x: hidden;
   padding: 16px;
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
 .card-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 16px;
   width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  padding: 0 8px;
 }
 
 .no-cards {

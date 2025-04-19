@@ -5,23 +5,34 @@
 
     <main class="content">
       <div class="content-wrapper">
-        <SearchBar v-model:search-query="searchQuery" @select-result="selectSearchResult" />
+        <!-- Main Content Area -->
+        <div class="main-content">
+          <!-- Left Content -->
+          <div class="left-content">
+            <SearchBar v-model:search-query="searchQuery" @select-result="selectSearchResult" />
 
-        <h2 class="view-title">{{ getCurrentViewName() }}</h2>
+            <h2 class="view-title">{{ getCurrentViewName() }}</h2>
 
-        <!-- Search Results View -->
-        <div v-if="currentView === 'search'" class="search-view">
-          <div v-if="selectedResult" class="selected-result">
-            <BaseCard :data="selectedResult" />
+            <!-- Search Results View -->
+            <div v-if="currentView === 'search'" class="search-view">
+              <div v-if="selectedResult" class="selected-result">
+                <BaseCard :data="selectedResult" />
+              </div>
+              <div v-else class="no-result">
+                <p>请输入关键词搜索知识库</p>
+              </div>
+            </div>
+
+            <!-- Dynamic Views -->
+            <div class="view-content">
+              <component :is="getViewComponent(currentView)" :viewId="currentView" />
+            </div>
           </div>
-          <div v-else class="no-result">
-            <p>请输入关键词搜索知识库</p>
-          </div>
-        </div>
 
-        <!-- Dynamic Views -->
-        <div class="view-content">
-          <component :is="getViewComponent(currentView)" :viewId="currentView" />
+          <!-- Card Content Area -->
+          <div class="card-container">
+            <!-- 预留空白区域 -->
+          </div>
         </div>
       </div>
     </main>
