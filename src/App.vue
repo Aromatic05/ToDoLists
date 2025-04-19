@@ -54,10 +54,6 @@ export default {
       // 视图配置
       viewNames: {
         'home': { name: '首页', type: 'list' },
-        'discover': { name: '发现', type: 'card' },
-        'search': { name: '知识库', type: 'card' },
-        'profile': { name: '个人信息', type: 'card' },
-        'favorites': { name: '收藏', type: 'card' },
         'settings': { name: '设置', type: 'card' },
         "timeView": { name: "时间视图", icon: "mdi-calendar-clock" },
         "orderView": { name: "排序视图", icon: "mdi-sort" },

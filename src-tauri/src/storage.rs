@@ -1,10 +1,12 @@
 use anyhow::Result;
 use redb::{self, Database, ReadableTable, TableDefinition};
 use serde::{Deserialize, Serialize};
-
+use std::sync::Mutex;
 use crate::dirs::app_data_dir;
 
 const TABLE: TableDefinition<&[u8], &[u8]> = TableDefinition::new("events");
+
+pub struct StorageState(pub Mutex<Storage>);
 
 pub struct Storage {
     db: Database,
@@ -28,6 +30,11 @@ impl Storage {
         get_events(&self.db, filter)
     }
 }
+pub struct EventMetadata {
+    pub uuid: String,
+    pub title: String,
+    pub timestamp: u64,
+}
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub enum EventType {
@@ -50,46 +57,25 @@ pub enum TaskTime {
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Event {
     pub uuid: String,
-    title: String,
-    content: String,
-    timestamp: u64,
-    event_type: EventType,
-    task_time: TaskTime,
+    pub title: String,
+    pub content: String,
+    pub timestamp: u64,
+    pub event_type: EventType,
+    pub task_time: TaskTime,
 }
 
-impl Event {
-    pub fn new_instant(
-        uuid: String,
-        title: String,
-        content: String,
-        timestamp: u64,
-        deadline: u64,
-    ) -> Self {
-        Self {
-            uuid,
-            title,
-            content,
-            timestamp,
-            event_type: EventType::Instant,
-            task_time: TaskTime::Deadline(deadline),
-        }
-    }
+trait Repreent {
+    type Metadata;
+    fn get_metadata(&self) -> Self::Metadata;
+}
 
-    pub fn new_duration(
-        uuid: String,
-        title: String,
-        content: String,
-        timestamp: u64,
-        start: u64,
-        end: u64,
-    ) -> Self {
-        Self {
-            uuid,
-            title,
-            content,
-            timestamp,
-            event_type: EventType::Duration,
-            task_time: TaskTime::Duration(DurationTime { start, end }),
+impl Repreent for Event {
+    type Metadata = EventMetadata;
+    fn get_metadata(&self) -> Self::Metadata {
+        EventMetadata {
+            uuid: self.uuid.clone(),
+            title: self.title.clone(),
+            timestamp: self.timestamp,
         }
     }
 }
