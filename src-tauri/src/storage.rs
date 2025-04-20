@@ -1,8 +1,11 @@
+use crate::dirs::app_data_dir;
+
 use anyhow::Result;
+use chrono::Utc;
 use redb::{self, Database, ReadableTable, TableDefinition};
 use serde::{Deserialize, Serialize};
 use std::sync::Mutex;
-use crate::dirs::app_data_dir;
+use uuid::Uuid;
 
 const TABLE: TableDefinition<&[u8], &[u8]> = TableDefinition::new("events");
 
@@ -30,10 +33,19 @@ impl Storage {
         get_events(&self.db, filter)
     }
 }
+#[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
 pub struct EventMetadata {
-    pub uuid: String,
-    pub title: String,
-    pub timestamp: u64,
+    uuid: String,
+    timestamp: u64,
+}
+
+impl EventMetadata {
+    pub fn new() -> Self {
+        Self {
+            uuid: Uuid::new_v4().to_string(),
+            timestamp: Utc::now().timestamp_millis() as u64,
+        }
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, PartialEq)]
@@ -56,28 +68,11 @@ pub enum TaskTime {
 
 #[derive(Serialize, Deserialize, Debug, Clone)]
 pub struct Event {
-    pub uuid: String,
+    pub metadata: EventMetadata,
     pub title: String,
     pub content: String,
-    pub timestamp: u64,
     pub event_type: EventType,
     pub task_time: TaskTime,
-}
-
-trait Repreent {
-    type Metadata;
-    fn get_metadata(&self) -> Self::Metadata;
-}
-
-impl Repreent for Event {
-    type Metadata = EventMetadata;
-    fn get_metadata(&self) -> Self::Metadata {
-        EventMetadata {
-            uuid: self.uuid.clone(),
-            title: self.title.clone(),
-            timestamp: self.timestamp,
-        }
-    }
 }
 
 fn connect_to_db() -> Result<Database> {
@@ -94,7 +89,7 @@ fn add_event(event: Event, db: &Database) -> Result<()> {
     let txn = db.begin_write()?;
     {
         let mut table = txn.open_table(TABLE)?;
-        let key = event.uuid.as_bytes();
+        let key = event.metadata.uuid.as_bytes();
         let value = serde_json::to_vec(&event)?;
         table.insert(&key[..], &value[..])?;
     }

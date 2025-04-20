@@ -1,9 +1,10 @@
 mod dirs;
-mod storage;
 mod ipc;
+mod storage;
+mod aigc;
 
+use std::sync::Mutex;
 use storage::Storage;
-use std::sync::Mutex; 
 
 pub fn run() -> std::io::Result<()> {
     let storage = Storage::new().expect("Failed to initialize storage");
@@ -15,6 +16,7 @@ pub fn run() -> std::io::Result<()> {
             ipc::add_event,
             ipc::delete_event,
             ipc::get_events,
+            ipc::get_metadata,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

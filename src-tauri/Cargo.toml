@@ -38,3 +38,5 @@ convert_case = "0.8.0"
 bincode = "2.0.1"
 chrono = "0.4.40"
 uuid = { version = "1.16.0", features = ["v4"] }
+reqwest = { version = "0.12.15", features = ["json"] }
+log = "0.4.27"

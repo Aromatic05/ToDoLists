@@ -1,9 +1,12 @@
-use crate::storage;
-use chrono::Utc;
+use crate::storage::{self, EventMetadata};
 use tauri::State;
-use uuid::Uuid;
 
 use crate::storage::{Event, EventType, StorageState};
+
+#[tauri::command]
+pub fn get_metadata(event: Event) -> EventMetadata {
+    event.metadata.clone()
+}
 
 #[tauri::command]
 pub fn new_event(
@@ -12,18 +15,16 @@ pub fn new_event(
     event_type: String,
     task_time: storage::TaskTime,
 ) -> Event {
-    let uuid = Uuid::new_v4().to_string();
+    let metadata = EventMetadata::new();
     let event_type = match event_type.as_str() {
         "Instant" => EventType::Instant,
         "Duration" => EventType::Duration,
         _ => panic!("Invalid event type"),
     };
-    let timestamp = Utc::now().timestamp_millis() as u64;
     Event {
-        uuid,
+        metadata,
         title,
         content,
-        timestamp,
         event_type,
         task_time,
     }
@@ -50,7 +51,10 @@ pub async fn delete_event(state: State<'_, StorageState>, uuid: String) -> Resul
 }
 
 #[tauri::command]
-pub async fn get_events(state: State<'_, StorageState>, deadline: u64) -> Result<Vec<Event>, String> {
+pub async fn get_events(
+    state: State<'_, StorageState>,
+    deadline: u64,
+) -> Result<Vec<Event>, String> {
     let filter = storage::TimeFilter { ddl: deadline };
     state
         .0
