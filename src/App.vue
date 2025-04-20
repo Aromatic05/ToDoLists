@@ -1,7 +1,6 @@
 <template>
   <div class="app-container">
-    <Sidebar :activeView="currentView" @view-change="currentView = $event" @theme-change="handleThemeChange"
-      @toggle-dark-mode="handleDarkModeToggle" />
+    <Sidebar :activeView="currentView" @view-change="currentView = $event" />
 
     <main class="content">
       <div class="content-wrapper">
@@ -15,9 +14,7 @@
 
             <!-- Search Results View -->
             <div v-if="currentView === 'search'" class="search-view">
-              <div v-if="selectedResult" class="selected-result">
-                <BaseCard :data="selectedResult" />
-              </div>
+              <div v-if="selectedResult" class="selected-result"></div>
               <div v-else class="no-result">
                 <p>请输入关键词搜索知识库</p>
               </div>

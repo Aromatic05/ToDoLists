@@ -51,13 +51,13 @@ body {
 /* 视图标题样式 */
 .view-title {
   margin: 0;
-  padding: 4px 0;
+  padding: 2px 0;
   text-align: center;
   color: var(--view-title-color);
   font-weight: 500;
   font-size: 28px;
   transition: color 0.5s ease;
-  line-height: 0.2;
+  line-height: 0.1;
 }
 
 /* 主要内容区域布局 */
@@ -102,17 +102,20 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   position: relative;
-  padding: 0 8px;
   height: 100%;
+  margin-right: 80px;
+  margin-left: 80px;
   scrollbar-width: thin;
   scrollbar-color: var(--md-sys-color-outline) var(--md-sys-color-surface);
   display: flex;
   flex-direction: column;
   gap: 16px;
+  /* margin: 0 auto;  */
 }
 
 /* 卡片容器 */
 .card-container {
+  display: flex;
   width: 500px;
   min-width: 500px;
   height: 100%;
