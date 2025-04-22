@@ -6,7 +6,7 @@
                     <transition-group name="card" tag="div" class="cards-wrapper" @before-enter="beforeEnter"
                         @enter="enter" @leave="leave">
                         <div v-for="(card, index) in cards" :key="card.id" class="card-wrapper" :data-index="index">
-                            <BaseCard :data="card" @click="handleCardClick" />
+                            <SettingCard :data="card" @click="handleCardClick" />
                         </div>
                     </transition-group>
                 </div>
@@ -27,13 +27,13 @@
 </template>
 
 <script>
-import BaseCard from '@/components/Cards/BaseCard.vue';
+import SettingCard from '@/components/Cards/SettingCard.vue';
 import CardDataService from '@/services/CardDataService';
 
 export default {
     name: 'SettingView',
     components: {
-        BaseCard
+        SettingCard
     },
     props: {
         viewId: {
@@ -114,11 +114,14 @@ export default {
 
 .settings-scroll-container {
     flex: 1;
-    overflow-y: scroll; /* 改为 scroll 确保始终有滚动条空间 */
+    overflow-y: scroll;
+    /* 改为 scroll 确保始终有滚动条空间 */
     display: flex;
     flex-direction: column;
-    margin-right: -20px; /* 向右偏移隐藏滚动条 */
-    padding-right: 20px; /* 补偿内容区域 */
+    margin-right: -20px;
+    /* 向右偏移隐藏滚动条 */
+    padding-right: 20px;
+    /* 补偿内容区域 */
 }
 
 .cards-container {

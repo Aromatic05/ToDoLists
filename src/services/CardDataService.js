@@ -6,11 +6,11 @@ const CARDS_PER_PAGE = 12;
 // 卡片数据
 const cardsData = {
   settings: [
-    { id: 1, type: "base", title: "外观设置", content: "更改主题、颜色和布局", tags: ["外观", "主题"] },
-    { id: 2, type: "base", title: "通知管理", content: "控制接收的通知类型和频率", tags: ["通知", "提醒"] },
-    { id: 3, type: "base", title: "隐私控制", content: "管理数据共享和访问权限", tags: ["隐私", "权限"] },
-    { id: 4, type: "base", title: "帮助中心", content: "获取支持和查看常见问题解答", tags: ["帮助", "支持"] },
-    { id: 5, type: "base", title: "账号设置", content: "管理您的账号和订阅信息", tags: ["账号", "订阅"] }
+    { id: 1, type: "setting", title: "外观设置", content: "更改主题、颜色和布局", tags: ["外观", "主题"] },
+    { id: 2, type: "setting", title: "通知管理", content: "控制接收的通知类型和频率", tags: ["通知", "提醒"] },
+    { id: 3, type: "setting", title: "隐私控制", content: "管理数据共享和访问权限", tags: ["隐私", "权限"] },
+    { id: 4, type: "setting", title: "帮助中心", content: "获取支持和查看常见问题解答", tags: ["帮助", "支持"] },
+    { id: 5, type: "setting", title: "账号设置", content: "管理您的账号和订阅信息", tags: ["账号", "订阅"] }
   ],
   // 添加测试数据
   "1": [

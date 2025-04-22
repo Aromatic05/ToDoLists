@@ -1,31 +1,46 @@
 <template>
-  <div class="card-base" @click="handleCardClick">
+  <!-- 卡片主体 -->
+  <div class="card-base" @click.stop="handleCardClick">
     <h3 class="card-title">{{ data.title }}</h3>
     <p class="card-content">{{ data.content }}</p>
-    <div v-if="data.tags && data.tags.length > 0" class="card-tags">
+    <div v-if="data.tags?.length" class="card-tags">
       <span v-for="(tag, i) in data.tags" :key="i" class="card-tag">{{ tag }}</span>
     </div>
+
+    <!-- 将弹窗移到卡片外部 -->
   </div>
+
+  <!-- 独立弹窗 -->
+  <AddListModal v-model="showModal" @confirm="handleConfirm" />
 </template>
 
 <script>
+import AddListModal from '@/components/Modals/AddListModal.vue'
+
 export default {
   name: 'BaseCard',
+  components: {
+    AddListModal
+  },
+  data() {
+    return {
+      showModal: false
+    }
+  },
   props: {
     data: {
       type: Object,
       required: true,
-      validator: (value) => {
-        return value.id && value.title && value.content;
-      }
+      validator: (value) => value?.id && value?.title && value?.content
     }
   },
   methods: {
     handleCardClick() {
-      // 显示提示框
-      alert('卡片被点击了！');
-      // 触发点击事件，让父组件知道卡片被点击了
-      this.$emit('click', this.data);
+      // 阻止事件冒泡
+      this.showModal = true
+    },
+    handleConfirm(listName) {
+      this.$emit('create', listName)
     }
   }
 }

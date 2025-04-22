@@ -1,26 +1,50 @@
 <template>
-  <div class="add-list-item" @click="handleClick">
-    <div class="list-icon">
-      <i class="mdi mdi-plus"></i>
+  <div class="add-list-wrapper">
+    <!-- 触发按钮 -->
+    <div 
+      class="add-list-item" 
+      @click="showModal = true" 
+      role="button"
+      aria-label="新建列表"
+    >
+      <div class="list-icon">
+        <i class="mdi mdi-plus"></i>
+      </div>
+      <div class="list-title">新建列表</div>
     </div>
-    <div class="list-title">新建列表</div>
+
+    <!-- 内置弹窗组件 -->
+    <AddListModal
+      v-model="showModal"
+      @confirm="handleConfirm"
+    />
   </div>
 </template>
 
 <script>
-import '@mdi/font/css/materialdesignicons.css';
+import AddListModal from '@/components/Modals/AddListModal.vue'
 
 export default {
   name: 'AddList',
+  components: {
+    AddListModal
+  },
+  data() {
+    return {
+      showModal: false
+    }
+  },
   methods: {
-    handleClick() {
-      this.$emit('click');
+    handleConfirm(listName) {
+      // 将输入值传递给父组件
+      this.$emit('create', listName)
     }
   }
 }
 </script>
 
 <style scoped>
+/* 按钮样式 */
 .add-list-item {
   display: flex;
   align-items: center;
@@ -33,12 +57,17 @@ export default {
   margin-top: 16px;
   border: 1px dashed var(--md-sys-color-outline);
   width: 280px;
+  user-select: none;
 }
 
 .add-list-item:hover {
   background: var(--md-sys-color-surface-variant);
   transform: translateX(4px);
   border-color: var(--md-sys-color-primary);
+}
+
+.add-list-item:active {
+  transform: translateX(2px) scale(0.98);
 }
 
 .list-icon {
@@ -54,5 +83,19 @@ export default {
 .list-title {
   font-size: 14px;
   color: var(--md-sys-color-on-surface);
+  font-weight: 500;
+}
+
+/* 移动端优化 */
+@media (max-width: 480px) {
+  .add-list-item {
+    width: 100%;
+    margin-top: 12px;
+    padding: 10px 12px;
+  }
+  
+  .list-icon {
+    margin-right: 8px;
+  }
 }
 </style>
