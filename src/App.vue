@@ -10,7 +10,7 @@
           <div class="left-content">
             <SearchBar v-model:search-query="searchQuery" @select-result="selectSearchResult" />
 
-            <h2 class="view-title">{{ getCurrentViewName() }}</h2>
+            <!-- <h2 class="view-title">{{ getCurrentViewName() }}</h2> -->
 
             <!-- Search Results View -->
             <div v-if="currentView === 'search'" class="search-view">
@@ -26,10 +26,7 @@
             </div>
           </div>
 
-          <!-- Card Content Area -->
-          <div class="card-container">
-            <!-- 预留空白区域 -->
-          </div>
+          <!-- <div class="card-container"> </div> -->
         </div>
       </div>
     </main>
@@ -41,6 +38,7 @@ import Sidebar from '@/components/Sidebar.vue';
 import SearchBar from '@/components/SearchBar.vue';
 import CardView from '@/components/Views/CardView.vue';
 import ListView from '@/components/Views/ListView.vue';
+import SettingView from './components/Views/SettingView.vue';
 
 export default {
   name: 'App',
@@ -49,6 +47,7 @@ export default {
     SearchBar,
     CardView,
     ListView,
+    SettingView,
   },
   data() {
     return {
@@ -62,7 +61,7 @@ export default {
       // 视图配置
       viewNames: {
         'home': { name: '首页', type: 'list' },
-        'settings': { name: '设置', type: 'card' },
+        'settings': { name: '设置', type: 'setting' },
         "timeView": { name: "时间视图", icon: "mdi-calendar-clock" },
         "orderView": { name: "排序视图", icon: "mdi-sort" },
       }
@@ -87,7 +86,8 @@ export default {
         'card': 'CardView',
         'list': 'ListView',
         'calendar': 'CalendarView',
-        'add': 'AddView'
+        'add': 'AddView',
+        'setting': 'SettingView',
       };
       return componentMap[viewType];
     },

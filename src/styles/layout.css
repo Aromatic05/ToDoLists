@@ -26,9 +26,9 @@ body {
 
 /* 主要内容区域 */
 .content {
-  width: 100%;
+  width: 90%;
   height: 100vh;
-  padding: 20px 40px;
+  padding: 0px 50px;
   overflow: hidden;
   overflow-x: hidden;
   display: flex;
