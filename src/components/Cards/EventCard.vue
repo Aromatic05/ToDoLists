@@ -11,16 +11,16 @@
     </div>
 
     <!-- 独立弹窗 -->
-    <AddListModal v-model="showModal" @confirm="handleConfirm" />
+    <CardContentModal v-model="showModal" @confirm="handleConfirm" />
 </template>
 
 <script>
-import AddListModal from '@/components/Modals/AddListModal.vue'
+import CardContentModal from '@/components/Modals/CardContentModal.vue'
 
 export default {
     name: 'BaseCard',
     components: {
-        AddListModal
+        CardContentModal
     },
     data() {
         return {
