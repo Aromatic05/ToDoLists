@@ -103,8 +103,8 @@ body {
     overflow-x: hidden;
     position: relative;
     height: 100%;
-    margin-right: 80px;
-    margin-left: 80px;
+    margin-right: 60px;
+    margin-left: 60px;
     scrollbar-width: thin;
     scrollbar-color: var(--md-sys-color-outline) var(--md-sys-color-surface);
     display: flex;
