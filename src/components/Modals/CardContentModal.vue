@@ -2,18 +2,30 @@
     <div v-if="modelValue" class="modal-mask" @click.self="handleClose">
         <div class="modal-container">
             <div class="modal-header">
-                <h3>事件内容</h3>
-                <button @click="handleClose" aria-label="关闭弹窗">
-                    &times;
-                </button>
+                <h3>卡片详情</h3>
+                <button @click="handleClose" aria-label="关闭弹窗">&times;</button>
             </div>
             <div class="modal-body">
-                <input ref="input" v-model="inputValue" type="text" placeholder="输入列表名称" @keyup.enter="handleConfirm"
-                    aria-label="列表名称输入框">
+                <div class="form-group">
+                    <label for="title">标题</label>
+                    <input id="title" v-model="formData.title" type="text" placeholder="输入标题">
+                </div>
+                <div class="form-group">
+                    <label for="content">内容</label>
+                    <textarea id="content" v-model="formData.content" placeholder="输入内容" rows="4"></textarea>
+                </div>
+                <div class="form-group">
+                    <label for="tags">标签</label>
+                    <input id="tags" v-model="formData.tags" type="text" placeholder="用逗号分隔多个标签">
+                </div>
+                <div class="form-group">
+                    <label for="date">日期</label>
+                    <input id="date" v-model="formData.date" type="date">
+                </div>
             </div>
             <div class="modal-footer">
                 <button @click="handleClose">取消</button>
-                <button @click="handleConfirm" class="confirm-btn">确认</button>
+                <button type="button" @click="handleConfirm" class="confirm-btn">保存</button>
             </div>
         </div>
     </div>
@@ -21,35 +33,60 @@
 
 <script>
 export default {
-    name: 'AddListModal',
+    name: 'CardContentModal',
     props: {
         modelValue: {
             type: Boolean,
             default: false
+        },
+        cardData: {
+            type: Object,
+            required: true
         }
     },
     data() {
         return {
-            inputValue: ''
+            formData: {
+                title: '',
+                content: '',
+                tags: '',
+                date: ''
+            }
         }
     },
     watch: {
-        modelValue(newVal) {
-            if (newVal) {
-                this.$nextTick(() => this.$refs.input.focus())
+        modelValue: {
+            immediate: true,
+            handler(val) {
+                if (val) {
+                    this.initFormData()
+                }
             }
         }
     },
     methods: {
-        handleClose() {
-            this.inputValue = ''
-            this.$emit('update:modelValue', false)
+        initFormData() {
+            this.formData = {
+                title: this.cardData.title || '',
+                content: this.cardData.content || '',
+                tags: Array.isArray(this.cardData.tags) ? this.cardData.tags.join(',') : '',
+                date: this.cardData.date || ''
+            }
         },
         handleConfirm() {
-            if (this.inputValue.trim()) {
-                this.$emit('confirm', this.inputValue.trim())
-                this.handleClose()
+            const updatedData = {
+                ...this.cardData,
+                title: this.formData.title.trim(),
+                content: this.formData.content.trim(),
+                tags: this.formData.tags.split(',').map(tag => tag.trim()).filter(Boolean),
+                date: this.formData.date
             }
+            console.log('Updating card:', updatedData)
+            this.$emit('confirm', updatedData)
+            this.handleClose()
+        },
+        handleClose() {
+            this.$emit('update:modelValue', false)
         }
     }
 }
@@ -118,5 +155,37 @@ export default {
     background: var(--md-sys-color-primary);
     color: white;
     border: none;
+}
+
+.form-group {
+    margin-bottom: 16px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    color: var(--md-sys-color-on-surface);
+    font-weight: 500;
+}
+
+.form-group input,
+.form-group textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid var(--md-sys-color-outline);
+    border-radius: 4px;
+    background: var(--md-sys-color-surface);
+    color: var(--md-sys-color-on-surface);
+}
+
+.form-group textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+    outline: none;
+    border-color: var(--md-sys-color-primary);
 }
 </style>
