@@ -1,8 +1,10 @@
 <template>
-    <div class="card-base" @click="handleCardClick">
-        <h3 class="card-title">{{ data.title }}</h3>
-        <p class="card-content">{{ data.content }}</p>
-        <div v-if="data.tags && data.tags.length > 0" class="card-tags">
+    <div class="card-base" @click.stop="handleCardClick">
+        <div class="card-main">
+            <h3 class="card-title">{{ data.title }}</h3>
+            <p class="card-content">{{ data.content }}</p>
+        </div>
+        <div v-if="data.tags?.length" class="card-tags">
             <span v-for="(tag, i) in data.tags" :key="i" class="card-tag">{{ tag }}</span>
         </div>
     </div>

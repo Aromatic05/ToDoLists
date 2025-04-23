@@ -7,9 +7,9 @@ const mockItems = {
             title: '首页',
             type: 'base',
             cards: [
-                { id: 1, type: "base", title: "今日概览", content: "查看您今天的摘要信息和重要提醒", tags: ["今日", "概览"] },
-                { id: 2, type: "base", title: "任务清单", content: "您有 3 个待办任务需要完成", tags: ["任务", "待办"] },
-                { id: 3, type: "base", title: "日历", content: "下次会议：今天下午 3:00", tags: ["日历", "会议"] }
+                { id: 1, type: "base", title: "今日概览", content: "查看您今天的摘要信息和重要提醒, 更多更多的测试数据在这里, \n填充一下，不够两行， 继续填充内容", date: "2025-04-23", dateColor: "#ff0000", tags: ["今日", "概览", "今日", "概览"] },
+                { id: 2, type: "base", title: "任务清单", content: "您有 3 个待办任务需要完成", date: "2025-04-23 - 2025-04-25", dateColor: "#ff0000", tags: ["任务", "待办"] },
+                { id: 3, type: "base", title: "日历", content: "下次会议：今天下午 3:00", date: "2025-04-23", dateColor: "#ff0000", tags: ["日历", "会议"] }
             ]
         },
         {

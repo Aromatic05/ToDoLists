@@ -4,18 +4,18 @@
             暂无卡片
         </div>
         <div v-else class="card-grid">
-            <BaseCard v-for="card in cards" :key="card.id" :data="card" @click="handleCardClick" />
+            <EventCard v-for="card in cards" :key="card.id" :data="card" @click="handleCardClick" />
         </div>
     </div>
 </template>
 
 <script>
-import BaseCard from '@/components/Cards/BaseCard.vue';
+import EventCard from '@/components/Cards/EventCard.vue';
 
 export default {
     name: 'ListCardView',
     components: {
-        BaseCard
+        EventCard
     },
     props: {
         cards: {

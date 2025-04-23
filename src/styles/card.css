@@ -1,5 +1,9 @@
 /* 卡片基础样式 */
 .card-base {
+    display: flex;
+    position: relative;
+    justify-content: space-between;
+    align-items: flex-start;
     padding: 20px;
     border-radius: 18px;
     background: var(--md-sys-color-surface-container);
@@ -20,6 +24,15 @@
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
 }
 
+.card-main {
+    flex: 1;
+    margin-right: 16px;
+}
+
+.card-header {
+    min-width: 100px;
+    max-width: 100px;
+}
 
 /* 卡片标题通用样式 */
 .card-title {
@@ -31,21 +44,41 @@
 
 /* 卡片内容通用样式 */
 .card-content {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
     color: var(--md-sys-color-on-surface-variant);
-    margin-bottom: 0;
+    margin: 0;
     line-height: 1.5;
+    width: calc(60%);  /* 减去标签区域和边距的宽度 */
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;      /* 限制最多显示2行 */
+    -webkit-box-orient: vertical;
 }
 
 /* 标签容器样式 */
 .card-tags {
     display: flex;
+    position: absolute; 
+    right: 5px;
+    top: 50%;   
+    transform: translateY(-50%);
     flex-wrap: wrap;
     gap: 8px;
-    margin-top: 16px;
+    /* margin-top: 16px; */
+    width: 160px;
 }
 
 /* 标签项样式 */
 .card-tag {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    justify-content: flex-end;
     padding: 4px 12px;
     background: var(--md-sys-color-surface-variant);
     color: var(--md-sys-color-on-surface-variant);
@@ -53,4 +86,8 @@
     font-size: 14px;
     white-space: nowrap;
     border: 1px solid var(--md-sys-color-outline-variant);
+}
+
+.card-date {
+    font-size: 16px;
 }
