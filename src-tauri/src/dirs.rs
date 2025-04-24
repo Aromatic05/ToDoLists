@@ -5,7 +5,7 @@ use once_cell::sync::Lazy;
 use std::{borrow::Cow, fs, path::PathBuf};
 
 pub const APP_NAME: &str = "todolists";
-pub const TODOLIST_CONFIG: &str = "todolist.yaml";
+pub const TODOLIST_CONFIG: &str = "todolist.toml";
 
 pub static APP_DIR_PLACEHOLDER: Lazy<Cow<'static, str>> = Lazy::new(|| {
     use convert_case::{Case, Casing};

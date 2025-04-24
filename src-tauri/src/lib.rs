@@ -2,6 +2,7 @@ mod dirs;
 mod ipc;
 mod storage;
 mod aigc;
+mod config;
 
 use std::sync::Mutex;
 use storage::Storage;
