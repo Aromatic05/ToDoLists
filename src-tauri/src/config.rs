@@ -1,6 +1,7 @@
 use anyhow::Result;
-use fs;
-use serde::{Deserialize, Serialize};
+use std::fs;
+use serde::Deserialize;
+use tauri::Manager;
 use toml;
 
 #[derive(Deserialize)]
@@ -14,6 +15,7 @@ struct Model {
     switch: bool,
     name: String,
     tokens: String,
+    prompt: String,
 }
 #[derive(Deserialize)]
 #[allow(dead_code)]
@@ -29,11 +31,13 @@ struct Config {
     model: Model,
 }
 
-fn parse() {
-    let config_path = tauri::
-        .unwrap()
-        .join("todolist.toml");
-    let config_str = fs::read_to_string(config_path).unwrap();
-    let config: Config = toml::from_str(&config_str).unwrap();
-    println!("{:?}", config);
+#[tauri::command]
+pub fn parse(app: tauri::State<'_, tauri::AppHandle>) -> Result<(), String> {
+    let config_path = app.path()
+        .config_dir()
+        .map_err(|e| e.to_string())?
+        .join("config.toml");
+    let config_str = fs::read_to_string(config_path).map_err(|e| e.to_string())?;
+    let config: Config = toml::from_str(&config_str).map_err(|e| e.to_string())?;
+    Ok(())
 }

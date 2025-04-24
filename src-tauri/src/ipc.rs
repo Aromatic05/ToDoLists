@@ -27,6 +27,7 @@ pub fn new_event(
         content,
         event_type,
         task_time,
+        finished: false,
     }
 }
 

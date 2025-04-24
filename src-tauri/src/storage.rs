@@ -1,10 +1,9 @@
-use crate::dirs::app_data_dir;
-
 use anyhow::Result;
 use chrono::Utc;
 use redb::{self, Database, ReadableTable, TableDefinition};
 use serde::{Deserialize, Serialize};
 use std::sync::Mutex;
+use tauri::Manager;
 use uuid::Uuid;
 
 const TABLE: TableDefinition<&[u8], &[u8]> = TableDefinition::new("events");
@@ -16,8 +15,8 @@ pub struct Storage {
 }
 
 impl Storage {
-    pub fn new() -> Result<Self> {
-        let db = connect_to_db()?;
+    pub fn new(app:tauri::State<'_, tauri::AppHandle>) -> Result<Self> {
+        let db = connect_to_db(app)?;
         Ok(Self { db })
     }
 
@@ -73,10 +72,14 @@ pub struct Event {
     pub content: String,
     pub event_type: EventType,
     pub task_time: TaskTime,
+    pub finished: bool,
 }
 
-fn connect_to_db() -> Result<Database> {
-    let data_dir = app_data_dir()?;
+fn connect_to_db(app: tauri::State<'_, tauri::AppHandle>) -> Result<Database> {
+    let data_dir = app
+        .path()
+        .data_dir()?
+        .join("events");
     let db_path = data_dir.join("events.db");
     if !db_path.exists() {
         std::fs::create_dir_all(&data_dir)?;

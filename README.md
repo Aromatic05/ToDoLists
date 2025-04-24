@@ -80,6 +80,7 @@ time = [
 switch = false
 name = "deepseek-v3"
 tokens = " "
+prompt = "你是一个优秀的助手"
 ```
 
 ## 6.开发与构建指南
