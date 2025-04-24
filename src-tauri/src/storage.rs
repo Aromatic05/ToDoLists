@@ -15,7 +15,7 @@ pub struct Storage {
 }
 
 impl Storage {
-    pub fn new(app:tauri::State<'_, tauri::AppHandle>) -> Result<Self> {
+    pub fn new(app:&tauri::AppHandle) -> Result<Self> {
         let db = connect_to_db(app)?;
         Ok(Self { db })
     }
@@ -75,7 +75,7 @@ pub struct Event {
     pub finished: bool,
 }
 
-fn connect_to_db(app: tauri::State<'_, tauri::AppHandle>) -> Result<Database> {
+fn connect_to_db(app: &tauri::AppHandle) -> Result<Database> {
     let data_dir = app
         .path()
         .data_dir()?

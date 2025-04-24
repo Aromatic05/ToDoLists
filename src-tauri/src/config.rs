@@ -32,7 +32,7 @@ struct Config {
 }
 
 #[tauri::command]
-pub fn parse(app: tauri::State<'_, tauri::AppHandle>) -> Result<(), String> {
+pub fn parse(app:tauri::AppHandle) -> Result<(), String> {
     let config_path = app.path()
         .config_dir()
         .map_err(|e| e.to_string())?

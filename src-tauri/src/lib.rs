@@ -11,7 +11,7 @@ use tauri::Manager;
 pub fn run() -> std::io::Result<()> {
     tauri::Builder::default()
         .setup(|app|{
-          let storage = Storage::new(app.state())?;
+          let storage = Storage::new(app.handle())?;
           app.manage(StorageState(Mutex::new(storage)));
           Ok(())
         }
