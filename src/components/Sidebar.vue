@@ -11,8 +11,8 @@
         <!-- Theme buttons -->
         <div class="theme-buttons">
             <!-- Theme selector -->
-            <div class="theme-selector">
-                <button class="circle-button theme-select" @click="showThemeOptions = !showThemeOptions">
+            <div class="theme-selector" ref="themeSelector">
+                <button class="circle-button theme-select" @click="toggleThemeOptions">
                     <div class="theme-color-circle" :style="{ background: getThemeColor(currentTheme) }"></div>
                 </button>
                 <div v-if="showThemeOptions" class="theme-options">
@@ -76,7 +76,16 @@ export default {
             this.isDarkMode = e.matches;
             this.applyTheme();
         });
+
+        // 添加全局点击事件监听器
+        document.addEventListener('click', this.handleOutsideClick);
     },
+    
+    beforeUnmount() {
+        // 组件销毁前移除事件监听器
+        document.removeEventListener('click', this.handleOutsideClick);
+    },
+    
     methods: {
         handleViewChange(viewId) {
             this.currentView = viewId;
@@ -111,6 +120,24 @@ export default {
             // 确保背景颜色更新
             document.documentElement.style.backgroundColor = getComputedStyle(document.documentElement)
                 .getPropertyValue('--md-sys-color-background');
+        },
+
+        toggleThemeOptions(event) {
+            // 阻止事件冒泡，避免立即触发外部点击事件
+            event.stopPropagation();
+            this.showThemeOptions = !this.showThemeOptions;
+        },
+
+        handleOutsideClick(event) {
+            // 如果主题选项菜单当前打开
+            if (this.showThemeOptions) {
+                // 检查点击是否在主题选择器内
+                const themeSelector = this.$refs.themeSelector;
+                if (themeSelector && !themeSelector.contains(event.target)) {
+                    // 点击在主题选择器外部，关闭菜单
+                    this.showThemeOptions = false;
+                }
+            }
         }
     }
 };
@@ -119,10 +146,10 @@ export default {
 <style scoped>
 .floating-buttons-container {
     position: fixed;
-    z-index: 100;
     display: flex;
     flex-direction: column;
     gap: 20px;
+    z-index: 9999; 
 }
 
 .nav-buttons {
@@ -133,7 +160,7 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 16px;
-    z-index: 100;
+    z-index: 9999; 
 }
 
 .theme-buttons {
@@ -143,7 +170,7 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 12px;
-    z-index: 100;
+    z-index: 9999 ;
 }
 
 .circle-button {
@@ -200,6 +227,7 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 4px;
+    z-index: 10000;
 }
 
 .theme-option {
@@ -213,6 +241,7 @@ export default {
     color: var(--md-sys-color-on-surface);
     cursor: pointer;
     transition: background-color 0.2s;
+    /* z-index: 10000; */
 }
 
 .theme-option:hover {
