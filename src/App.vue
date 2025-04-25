@@ -1,160 +1,117 @@
-<script setup>
-import { ref } from "vue";
-import { invoke } from "@tauri-apps/api/core";
-
-const greetMsg = ref("");
-const name = ref("");
-
-async function greet() {
-  // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-  greetMsg.value = await invoke("greet", { name: name.value });
-}
-</script>
-
 <template>
-  <main class="container">
-    <h1>Welcome to Tauri + Vue</h1>
+    <div class="app-container">
+        <Sidebar :activeView="currentView" @view-change="currentView = $event" />
 
-    <div class="row">
-      <a href="https://vitejs.dev" target="_blank">
-        <img src="/vite.svg" class="logo vite" alt="Vite logo" />
-      </a>
-      <a href="https://tauri.app" target="_blank">
-        <img src="/tauri.svg" class="logo tauri" alt="Tauri logo" />
-      </a>
-      <a href="https://vuejs.org/" target="_blank">
-        <img src="./assets/vue.svg" class="logo vue" alt="Vue logo" />
-      </a>
+        <main class="content">
+            <div class="content-wrapper">
+                <!-- Main Content Area -->
+                <div class="main-content">
+                    <!-- Left Content -->
+                    <div class="left-content">
+                        <SearchBar v-model:search-query="searchQuery" @select-result="selectSearchResult" />
+
+                        <!-- <h2 class="view-title">{{ getCurrentViewName() }}</h2> -->
+
+                        <!-- Search Results View -->
+                        <div v-if="currentView === 'search'" class="search-view">
+                            <div v-if="selectedResult" class="selected-result"></div>
+                            <div v-else class="no-result">
+                                <p>请输入关键词搜索知识库</p>
+                            </div>
+                        </div>
+
+                        <!-- Dynamic Views -->
+                        <div class="view-content">
+                            <component :is="getViewComponent(currentView)" :viewId="currentView" />
+                        </div>
+                    </div>
+
+                    <!-- <div class="card-container"> </div> -->
+                </div>
+            </div>
+        </main>
     </div>
-    <p>Click on the Tauri, Vite, and Vue logos to learn more.</p>
-
-    <form class="row" @submit.prevent="greet">
-      <input id="greet-input" v-model="name" placeholder="Enter a name..." />
-      <button type="submit">Greet</button>
-    </form>
-    <p>{{ greetMsg }}</p>
-  </main>
 </template>
 
-<style scoped>
-.logo.vite:hover {
-  filter: drop-shadow(0 0 2em #747bff);
-}
+<script>
+import Sidebar from '@/components/Sidebar.vue';
+import SearchBar from '@/components/SearchBar.vue';
+import CardView from '@/components/Views/CardView.vue';
+import ListView from '@/components/Views/ListView.vue';
+import SettingView from '@/components/Views/SettingView.vue';
+import CalendarView from '@/components/Views/CalendarView.vue';
 
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #249b73);
-}
+export default {
+    name: 'App',
+    components: {
+        Sidebar,
+        SearchBar,
+        CardView,
+        ListView,
+        SettingView,
+        CalendarView,
+    },
+    data() {
+        return {
+            // 视图状态
+            currentView: "home",
 
-</style>
+            // 搜索状态
+            searchQuery: "",
+            selectedResult: null,
+
+            // 视图配置
+            viewNames: {
+                'home': { name: '首页', type: 'list' },
+                'settings': { name: '设置', type: 'setting' },
+                "timeView": { name: "时间视图", type: 'calendar', icon: "mdi-calendar-clock" },
+                "orderView": { name: "排序视图", icon: "mdi-sort" },
+            }
+        };
+    },
+    methods: {
+        // 获取当前视图名称
+        getCurrentViewName() {
+            return this.viewNames[this.currentView]?.name || this.currentView;
+        },
+
+        // 选择搜索结果
+        selectSearchResult(result) {
+            this.selectedResult = result;
+            this.currentView = 'search';
+        },
+
+        // 获取视图组件
+        getViewComponent(viewId) {
+            const viewType = this.viewNames[viewId]?.type;
+            if (!viewType) {
+                console.warn(`未找到视图类型: ${viewId}`);
+                return 'CardView';
+            }
+            const componentMap = {
+                'card': 'CardView',
+                'list': 'ListView',
+                'calendar': 'CalendarView',
+                'add': 'AddView',
+                'setting': 'SettingView',
+            };
+            const component = componentMap[viewType];
+            if (!component) {
+                console.warn(`未找到对应的组件: ${viewType}`);
+                return 'CardView';
+            }
+            return component;
+        },
+    }
+};
+</script>
+
 <style>
-:root {
-  font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 400;
+@import './styles/layout.css';
 
-  color: #0f0f0f;
-  background-color: #f6f6f6;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  -webkit-text-size-adjust: 100%;
+.app-container {
+    background: var(--md-sys-color-background);
+    color: var(--md-sys-color-on-surface);
+    transition: background-color 0.5s ease, color 0.5s ease;
 }
-
-.container {
-  margin: 0;
-  padding-top: 10vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-}
-
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: 0.75s;
-}
-
-.logo.tauri:hover {
-  filter: drop-shadow(0 0 2em #24c8db);
-}
-
-.row {
-  display: flex;
-  justify-content: center;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-
-a:hover {
-  color: #535bf2;
-}
-
-h1 {
-  text-align: center;
-}
-
-input,
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  color: #0f0f0f;
-  background-color: #ffffff;
-  transition: border-color 0.25s;
-  box-shadow: 0 2px 2px rgba(0, 0, 0, 0.2);
-}
-
-button {
-  cursor: pointer;
-}
-
-button:hover {
-  border-color: #396cd8;
-}
-button:active {
-  border-color: #396cd8;
-  background-color: #e8e8e8;
-}
-
-input,
-button {
-  outline: none;
-}
-
-#greet-input {
-  margin-right: 5px;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    color: #f6f6f6;
-    background-color: #2f2f2f;
-  }
-
-  a:hover {
-    color: #24c8db;
-  }
-
-  input,
-  button {
-    color: #ffffff;
-    background-color: #0f0f0f98;
-  }
-  button:active {
-    background-color: #0f0f0f69;
-  }
-}
-
 </style>
